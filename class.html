@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星聆云课堂 - 特殊儿童在线干预课程</title>
+    <!-- 外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    
+    <!-- Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3E7C17',    // 主色：生机绿
+                        secondary: '#F5F9F2',  // 辅助色：浅柔绿
+                        accent: '#8FBF7B',     // 强调色：淡青绿
+                        dark: '#2D4A22',       // 深色：深绿（文字/边框）
+                        light: '#FFFFFF',      // 白色：背景/卡片
+                        yellow: '#FBBF24',     // 新增：黄色（装饰元素）
+                        blue: '#3B82F6',       // 新增：蓝色（点缀元素）
+                        success: '#4CAF50',
+                        warning: '#FFC107',
+                        danger: '#F44336'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['"Comic Sans MS"', '"Marker Felt"', 'cursive'], // 儿童友好字体
+                        comic: ['"Comic Sans MS"', '"Marker Felt"', 'cursive'], // 新增：卡通字体
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(62, 124, 23, 0.08)',
+                        'medium': '0 8px 30px rgba(62, 124, 23, 0.12)',
+                        'strong': '0 12px 40px rgba(62, 124, 23, 0.15)',
+                        'glow': '0 0 15px rgba(62, 124, 23, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义样式 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-pattern {
+                background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233E7C17' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            }
+            .card-hover {
+                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            .card-hover:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 12px 30px rgba(62, 124, 23, 0.15);
+            }
+            .btn-hover {
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            .btn-hover:hover {
+                transform: translateY(-2px);
+            }
+            .nav-link {
+                position: relative;
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            .nav-link::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: -2px;
+                left: 0;
+                background-color: #3E7C17;
+                transition: width 0.3s ease;
+            }
+            .nav-link:hover::after,
+            .nav-link.active::after {
+                width: 100%;
+            }
+            .pulse {
+                animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+            .fade-in {
+                animation: fadeIn 0.5s ease forwards;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .slide-in {
+                animation: slideIn 0.5s ease forwards;
+            }
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateX(-20px); }
+                to { opacity: 1; transform: translateX(0); }
+            }
+            .progress-ring {
+                transform: rotate(-90deg);
+                transform-origin: 50% 50%;
+            }
+            .modal-backdrop {
+                backdrop-filter: blur(4px);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-secondary font-sans text-dark bg-pattern">
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all 0.3s ease bg-transparent">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- 品牌Logo - 增加浮动动画 -->
+                <a href="#home" class="flex items-center gap-2">
+                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center float border-2 border-accent/30">
+                        <i class="fa fa-music text-light text-xl"></i>
+                    </div>
+                    <span class="text-[clamp(1.2rem,3vw,1.5rem)] font-comic font-bold text-primary">星聆Stellin 🎵</span>
+                </a>
+                
+                <!-- 桌面端导航 - 增加图标与卡通字体 -->
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="#home" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="home">首页 🏠</a>
+                    <a href="#features" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="features">核心功能 ⭐</a>
+                    <a href="#impact" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="impact">项目影响 🌱</a>
+                    <a href="#technology" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="technology">技术创新 🚀</a>
+                    <a href="#guide" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="guide">使用指南 📝</a>
+                    <a href="#testimonials" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="testimonials">家长见证 💬</a>
+                    <a href="#contact" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="contact">联系我们 📞</a>
+                    <a href="#register" class="bg-primary text-light px-5 py-2 rounded-full hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg font-comic text-lg">
+                        免费注册 🎁
+                    </a>
+                </nav>
+                
+                <!-- 移动端菜单按钮 - 优化样式 -->
+                <button id="menuBtn" class="md:hidden text-primary text-2xl focus:outline-none">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单（默认隐藏）- 增加卡通字体 -->
+        <div id="mobileMenu" class="hidden md:hidden bg-light shadow-lg absolute w-full border-t border-primary/20">
+            <div class="container mx-auto px-4 py-3 flex flex-col gap-3">
+                <a href="#home" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="home">首页 🏠</a>
+                <a href="#features" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="features">核心功能 ⭐</a>
+                <a href="#impact" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="impact">项目影响 🌱</a>
+                <a href="#technology" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="technology">技术创新 🚀</a>
+                <a href="#guide" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="guide">使用指南 📝</a>
+                <a href="#testimonials" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="testimonials">家长见证 💬</a>
+                <a href="#contact" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="contact">联系我们 📞</a>
+                <a href="#register" class="bg-primary text-light px-5 py-2 rounded-full text-center hover:bg-primary/90 transition-colors mt-2 font-comic text-lg">
+                    免费注册 🎁
+                </a>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- 页面主体内容 -->
+    <main class="pt-24 pb-16">
+        <!-- 今日课程 -->
+        <section class="py-10 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                    <div>
+                        <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold mb-2">今日课程</h1>
+                        <p class="text-dark/60">今天是 <span id="current-date">2023年6月15日 星期四</span></p>
+                    </div>
+                    <button class="btn-hover bg-primary/10 text-primary px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-primary/20 transition-colors">
+                        <i class="fa fa-calendar"></i>
+                        <span>查看完整日程</span>
+                    </button>
+                </div>
+                
+                <!-- 进行中的课程 -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+                    <!-- 主课程卡片 -->
+                    <div class="lg:col-span-2 bg-secondary rounded-2xl overflow-hidden shadow-medium hover:shadow-strong transition-all duration-300 border border-primary/10 card-hover">
+                        <div class="relative">
+                            <!-- 课程视频预览 -->
+                            <div class="aspect-video bg-dark relative overflow-hidden btn-hover" id="courseVideoPreview">
+                                <img src="https://picsum.photos/id/237/1200/675" alt="社交互动基础课程" class="w-full h-full object-cover opacity-80">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <button class="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center text-white shadow-lg pulse btn-hover">
+                                        <i class="fa fa-play text-xl"></i>
+                                    </button>
+                                </div>
+                                <!-- 课程标签 -->
+                                <div class="absolute top-4 left-4 bg-danger text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                    <i class="fa fa-clock-o"></i> 进行中
+                                </div>
+                                <!-- 课程时长 -->
+                                <div class="absolute bottom-4 right-4 bg-dark/70 text-white text-xs px-2 py-1 rounded">
+                                    剩余 18:25
+                                </div>
+                            </div>
+                            
+                            <!-- 课程信息 -->
+                            <div class="p-6">
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full btn-hover">社交互动</span>
+                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full btn-hover">4-6岁</span>
+                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full btn-hover">L2级别</span>
+                                </div>
+                                
+                                <h2 class="text-xl font-bold mb-3">社交互动基础：情绪识别与回应</h2>
+                                
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                                    <div class="flex items-center gap-3 btn-hover" id="teacherProfile">
+                                        <img src="https://picsum.photos/id/64/60/60" alt="李老师" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm">
+                                        <div>
+                                            <p class="font-medium">李老师</p>
+                                            <p class="text-xs text-dark/60">应用行为分析师</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-4">
+                                        <div class="flex items-center gap-1 btn-hover" id="viewStudents">
+                                            <i class="fa fa-users text-primary"></i>
+                                            <span class="text-sm">8名学员</span>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <i class="fa fa-clock-o text-primary"></i>
+                                            <span class="text-sm">40分钟</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 课程进度 -->
+                                <div class="mb-4">
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>课程进度</span>
+                                        <span>55%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-primary h-2 rounded-full" style="width: 55%"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 课程操作按钮 -->
+                                <div class="flex flex-wrap gap-3">
+                                    <button class="btn-hover flex-1 bg-primary text-white py-3 rounded-lg font-medium shadow-md hover:shadow-strong flex items-center justify-center gap-2">
+                                        <i class="fa fa-play"></i> 继续学习
+                                    </button>
+                                    <button class="btn-hover w-full sm:w-auto bg-white text-dark border border-gray-200 py-3 px-4 rounded-lg hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
+                                        <i class="fa fa-file-text-o"></i> 课程资料
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 今日其他课程 -->
+                    <div class="bg-white rounded-2xl shadow-medium overflow-hidden border border-gray-100">
+                        <div class="p-5 border-b border-gray-100">
+                            <h3 class="font-bold flex items-center gap-2">
+                                <i class="fa fa-list text-primary"></i> 今日其他课程
+                            </h3>
+                        </div>
+                        
+                        <div class="p-5 space-y-5">
+                            <!-- 课程项 1 -->
+                            <div class="flex gap-3 p-3 rounded-lg hover:bg-secondary transition-colors cursor-pointer card-hover">
+                                <div class="w-16 h-16 bg-primary/10 rounded-lg flex-shrink-0 overflow-hidden">
+                                    <img src="https://picsum.photos/id/119/100/100" alt="语言表达训练" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex justify-between items-start">
+                                        <h4 class="font-medium text-sm truncate">语言表达训练：基础词汇</h4>
+                                        <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded">15:30</span>
+                                    </div>
+                                    <p class="text-xs text-dark/60 mt-1">王老师 · 30分钟</p>
+                                    <div class="mt-2 flex items-center gap-2">
+                                        <span class="text-xs bg-secondary px-2 py-0.5 rounded-full btn-hover">L1级别</span>
+                                        <span class="text-xs bg-secondary px-2 py-0.5 rounded-full btn-hover">语言发展</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 课程项 2 -->
+                            <div class="flex gap-3 p-3 rounded-lg hover:bg-secondary transition-colors cursor-pointer card-hover">
+                                <div class="w-16 h-16 bg-primary/10 rounded-lg flex-shrink-0 overflow-hidden">
+                                    <img src="https://picsum.photos/id/15/100/100" alt="感官统合活动" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex justify-between items-start">
+                                        <h4 class="font-medium text-sm truncate">感官统合活动：触觉探索</h4>
+                                        <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded">19:00</span>
+                                    </div>
+                                    <p class="text-xs text-dark/60 mt-1">张老师 · 25分钟</p>
+                                    <div class="mt-2 flex items-center gap-2">
+                                        <span class="text-xs bg-secondary px-2 py-0.5 rounded-full btn-hover">L2级别</span>
+                                        <span class="text-xs bg-secondary px-2 py-0.5 rounded-full btn-hover">感官训练</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 课程项 3 -->
+                            <div class="flex gap-3 p-3 rounded-lg hover:bg-secondary transition-colors cursor-pointer card-hover opacity-60">
+                                <div class="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden">
+                                    <img src="https://picsum.photos/id/96/100/100" alt="认知游戏" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex justify-between items-start">
+                                        <h4 class="font-medium text-sm truncate">认知游戏：分类与匹配</h4>
+                                        <span class="bg-gray-200 text-dark/60 text-xs px-2 py-0.5 rounded">已完成</span>
+                                    </div>
+                                    <p class="text-xs text-dark/60 mt-1">刘老师 · 20分钟</p>
+                                    <div class="mt-2 flex items-center gap-2">
+                                        <span class="text-xs bg-gray-100 px-2 py-0.5 rounded-full btn-hover">L1级别</span>
+                                        <span class="text-xs bg-gray-100 px-2 py-0.5 rounded-full btn-hover">认知发展</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 border-t border-gray-100 bg-secondary/50">
+                            <button class="w-full text-primary text-sm hover:text-primary/80 transition-colors py-2 flex items-center justify-center gap-1 btn-hover">
+                                <span>查看全部日程</span>
+                                <i class="fa fa-angle-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 推荐课程 -->
+        <section id="courses" class="py-16 bg-secondary">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+                    <div>
+                        <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold mb-2">为您推荐的课程</h2>
+                        <p class="text-dark/60">根据孩子的学习情况和发展需求定制</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="prev-course" class="btn-hover w-10 h-10 rounded-full bg-white shadow-soft flex items-center justify-center text-dark hover:text-primary transition-colors">
+                            <i class="fa fa-angle-left"></i>
+                        </button>
+                        <button id="next-course" class="btn-hover w-10 h-10 rounded-full bg-white shadow-soft flex items-center justify-center text-dark hover:text-primary transition-colors">
+                            <i class="fa fa-angle-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 课程分类标签 -->
+                <div class="flex flex-wrap gap-3 mb-8">
+                    <button class="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium btn-hover">全部课程</button>
+                    <button class="bg-white text-dark px-4 py-2 rounded-full text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors btn-hover">社交互动</button>
+                    <button class="bg-white text-dark px-4 py-2 rounded-full text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors btn-hover">语言表达</button>
+                    <button class="bg-white text-dark px-4 py-2 rounded-full text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors btn-hover">认知发展</button>
+                    <button class="bg-white text-dark px-4 py-2 rounded-full text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors btn-hover">感官统合</button>
+                    <button class="bg-white text-dark px-4 py-2 rounded-full text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors btn-hover">情绪管理</button>
+                </div>
+                
+                <!-- 课程卡片网格 -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- 课程卡片 1 -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-soft card-hover">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/26/400/225" alt="情绪识别与表达" class="w-full aspect-video object-cover btn-hover">
+                            <div class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">L2</div>
+                            <div class="absolute top-3 right-3 bg-dark/70 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                                <i class="fa fa-clock-o"></i> 30分钟
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="font-bold mb-2 line-clamp-2">情绪识别与表达：认识面部表情</h3>
+                            <div class="flex items-center gap-2 mb-3">
+                                <img src="https://picsum.photos/id/65/40/40" alt="王老师" class="w-6 h-6 rounded-full object-cover btn-hover">
+                                <span class="text-xs text-dark/60">王老师 · 情绪治疗师</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">情绪管理</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">4-6岁</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-1">
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star-half-o text-yellow-400 text-xs"></i>
+                                    <span class="text-xs text-dark/60 ml-1">4.5 (28)</span>
+                                </div>
+                                <button class="btn-hover bg-primary/10 text-primary text-sm px-3 py-1 rounded-full hover:bg-primary hover:text-white transition-colors">
+                                    加入学习
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 课程卡片 2 -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-soft card-hover">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/177/400/225" alt="日常沟通用语" class="w-full aspect-video object-cover btn-hover">
+                            <div class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">L1</div>
+                            <div class="absolute top-3 right-3 bg-dark/70 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                                <i class="fa fa-clock-o"></i> 25分钟
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="font-bold mb-2 line-clamp-2">日常沟通用语：请求与回应</h3>
+                            <div class="flex items-center gap-2 mb-3">
+                                <img src="https://picsum.photos/id/66/40/40" alt="刘老师" class="w-6 h-6 rounded-full object-cover btn-hover">
+                                <span class="text-xs text-dark/60">刘老师 · 言语治疗师</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">语言表达</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">3-5岁</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-1">
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star-o text-yellow-400 text-xs"></i>
+                                    <span class="text-xs text-dark/60 ml-1">4.0 (42)</span>
+                                </div>
+                                <button class="btn-hover bg-primary/10 text-primary text-sm px-3 py-1 rounded-full hover:bg-primary hover:text-white transition-colors">
+                                    加入学习
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 课程卡片 3 -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-soft card-hover">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/110/400/225" alt="注意力训练" class="w-full aspect-video object-cover btn-hover">
+                            <div class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">L3</div>
+                            <div class="absolute top-3 right-3 bg-dark/70 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                                <i class="fa fa-clock-o"></i> 35分钟
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="font-bold mb-2 line-clamp-2">注意力训练：持续专注游戏</h3>
+                            <div class="flex items-center gap-2 mb-3">
+                                <img src="https://picsum.photos/id/91/40/40" alt="赵老师" class="w-6 h-6 rounded-full object-cover btn-hover">
+                                <span class="text-xs text-dark/60">赵老师 · 特教老师</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">认知发展</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">5-7岁</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-1">
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <span class="text-xs text-dark/60 ml-1">5.0 (19)</span>
+                                </div>
+                                <button class="btn-hover bg-primary/10 text-primary text-sm px-3 py-1 rounded-full hover:bg-primary hover:text-white transition-colors">
+                                    加入学习
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 课程卡片 4 -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-soft card-hover">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/184/400/225" alt="触觉脱敏活动" class="w-full aspect-video object-cover btn-hover">
+                            <div class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">L2</div>
+                            <div class="absolute top-3 right-3 bg-dark/70 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                                <i class="fa fa-clock-o"></i> 20分钟
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="font-bold mb-2 line-clamp-2">触觉脱敏活动：纹理探索</h3>
+                            <div class="flex items-center gap-2 mb-3">
+                                <img src="https://picsum.photos/id/26/40/40" alt="张老师" class="w-6 h-6 rounded-full object-cover btn-hover">
+                                <span class="text-xs text-dark/60">张老师 · OT治疗师</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">感官统合</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">4-6岁</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-1">
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star-half-o text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star-o text-yellow-400 text-xs"></i>
+                                    <span class="text-xs text-dark/60 ml-1">3.5 (31)</span>
+                                </div>
+                                <button class="btn-hover bg-primary/10 text-primary text-sm px-3 py-1 rounded-full hover:bg-primary hover:text-white transition-colors">
+                                    加入学习
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 查看更多按钮 -->
+                <div class="mt-10 text-center">
+                    <button class="btn-hover bg-white text-primary border border-primary px-6 py-3 rounded-full font-medium hover:bg-primary hover:text-white transition-colors shadow-soft">
+                        查看全部课程
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 学习计划与进度 -->
+        <section id="schedule" class="py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold mb-4">个性化学习计划</h2>
+                    <p class="text-dark/70">根据专业评估定制的发展计划，科学追踪孩子的成长进度</p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- 本周学习计划 -->
+                    <div class="lg:col-span-2 bg-secondary rounded-2xl shadow-soft p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-lg">本周学习计划</h3>
+                            <div class="flex items-center gap-2">
+                                <button class="btn-hover text-dark hover:text-primary p-1">
+                                    <i class="fa fa-angle-left"></i>
+                                </button>
+                                <span class="font-medium">第25周</span>
+                                <button class="btn-hover text-dark hover:text-primary p-1">
+                                    <i class="fa fa-angle-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 计划进度 -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                            <div class="bg-white p-4 rounded-xl shadow-sm btn-hover">
+                                <p class="text-dark/60 text-sm mb-1">本周课程总数</p>
+                                <p class="text-2xl font-bold text-primary">12</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm btn-hover">
+                                <p class="text-dark/60 text-sm mb-1">已完成</p>
+                                <p class="text-2xl font-bold text-primary">7 <span class="text-sm font-normal text-dark/60">/ 12</span></p>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm btn-hover">
+                                <p class="text-dark/60 text-sm mb-1">完成率</p>
+                                <p class="text-2xl font-bold text-primary">58%</p>
+                                <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                                    <div class="bg-primary h-1.5 rounded-full" style="width: 58%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 每日计划 -->
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded-xl shadow-sm">
+                                <div class="flex justify-between items-center mb-3">
+                                    <h4 class="font-medium">今天（周四）</h4>
+                                    <span class="bg-success/10 text-success text-xs px-2 py-1 rounded-full">进行中</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-secondary/50 btn-hover">
+                                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                            <i class="fa fa-check text-primary text-xs"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm">认知游戏：分类与匹配</p>
+                                            <p class="text-xs text-dark/60">09:30 - 09:50</p>
+                                        </div>
+                                        <span class="text-xs text-success">已完成</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-primary/5 border border-primary/20 btn-hover">
+                                        <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                                            <i class="fa fa-play text-primary text-xs"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium">社交互动基础：情绪识别与回应</p>
+                                            <p class="text-xs text-dark/60">14:00 - 14:40</p>
+                                        </div>
+                                        <span class="text-xs text-primary">进行中</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50 btn-hover">
+                                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                                            <i class="fa fa-clock-o text-dark/40 text-xs"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm">语言表达训练：基础词汇</p>
+                                            <p class="text-xs text-dark/60">15:30 - 16:00</p>
+                                        </div>
+                                        <span class="text-xs text-dark/40">未开始</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50 btn-hover">
+                                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                                            <i class="fa fa-clock-o text-dark/40 text-xs"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm">感官统合活动：触觉探索</p>
+                                            <p class="text-xs text-dark/60">19:00 - 19:25</p>
+                                        </div>
+                                        <span class="text-xs text-dark/40">未开始</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white p-4 rounded-xl shadow-sm btn-hover">
+                                <div class="flex justify-between items-center mb-3">
+                                    <h4 class="font-medium">明天（周五）</h4>
+                                    <span class="bg-gray-100 text-dark/60 text-xs px-2 py-1 rounded-full">4门课程</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50 btn-hover">
+                                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                                            <i class="fa fa-clock-o text-dark/40 text-xs"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm">情绪绘本阅读与讨论</p>
+                                            <p class="text-xs text-dark/60">10:00 - 10:30</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50 btn-hover">
+                                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                                            <i class="fa fa-clock-o text-dark/40 text-xs"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm">精细动作训练：串珠游戏</p>
+                                            <p class="text-xs text-dark/60">16:30 - 16:50</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="w-full text-primary text-xs py-2 mt-2 hover:text-primary/80 transition-colors btn-hover">
+                                    查看全部4门课程
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <button class="w-full mt-6 bg-white text-primary border border-primary/30 py-3 rounded-lg text-sm hover:bg-primary/5 transition-colors btn-hover">
+                            查看完整学习计划
+                        </button>
+                    </div>
+                    
+                    <!-- 学习进度 -->
+                    <div id="progress" class="bg-secondary rounded-2xl shadow-soft p-6">
+                        <h3 class="font-bold text-lg mb-6">发展领域进度</h3>
+                        
+                        <!-- 进度图表 -->
+                        <div class="bg-white p-4 rounded-xl shadow-sm mb-6 btn-hover" id="chartContainer">
+                            <canvas id="developmentChart" height="200"></canvas>
+                        </div>
+                        
+                        <!-- 各领域详情 -->
+                        <div class="space-y-5">
+                            <div class="btn-hover">
+                                <div class="flex justify-between items-center mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                            <i class="fa fa-comments text-primary text-sm"></i>
+                                        </div>
+                                        <span class="font-medium text-sm">语言表达</span>
+                                    </div>
+                                    <span class="text-sm font-bold">65%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-primary h-2 rounded-full" style="width: 65%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="btn-hover">
+                                <div class="flex justify-between items-center mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                            <i class="fa fa-users text-primary text-sm"></i>
+                                        </div>
+                                        <span class="font-medium text-sm">社交互动</span>
+                                    </div>
+                                    <span class="text-sm font-bold">48%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-primary h-2 rounded-full" style="width: 48%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="btn-hover">
+                                <div class="flex justify-between items-center mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                            <i class="fa fa-lightbulb-o text-primary text-sm"></i>
+                                        </div>
+                                        <span class="font-medium text-sm">认知发展</span>
+                                    </div>
+                                    <span class="text-sm font-bold">72%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-primary h-2 rounded-full" style="width: 72%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="btn-hover">
+                                <div class="flex justify-between items-center mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                            <i class="fa fa-child text-primary text-sm"></i>
+                                        </div>
+                                        <span class="font-medium text-sm">感官统合</span>
+                                    </div>
+                                    <span class="text-sm font-bold">55%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-primary h-2 rounded-full" style="width: 55%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="btn-hover">
+                                <div class="flex justify-between items-center mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                            <i class="fa fa-heart text-primary text-sm"></i>
+                                        </div>
+                                        <span class="font-medium text-sm">情绪管理</span>
+                                    </div>
+                                    <span class="text-sm font-bold">42%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-primary h-2 rounded-full" style="width: 42%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="w-full mt-6 bg-white text-primary border border-primary/30 py-3 rounded-lg text-sm hover:bg-primary/5 transition-colors btn-hover">
+                            查看详细评估报告
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 专业教师团队 -->
+        <section id="teachers" class="py-16 bg-secondary">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold mb-4">专业教师团队</h2>
+                    <p class="text-dark/70">由特殊教育领域专家组成的教师团队，为孩子提供专业、科学的干预指导</p>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- 教师卡片 1 -->
+                    <div class="bg-white rounded-2xl shadow-soft overflow-hidden card-hover">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/64/400/300" alt="李老师" class="w-full aspect-[4/3] object-cover btn-hover">
+                            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-dark/70 to-transparent p-4">
+                                <h3 class="text-white font-bold">李老师</h3>
+                                <p class="text-white/80 text-sm">应用行为分析师 (BCBA)</p>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">社交互动</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">行为干预</span>
+                            </div>
+                            <p class="text-sm text-dark/70 mb-4 line-clamp-3">
+                                10年特殊教育经验，专注于孤独症儿童社交技能培养和行为干预，擅长应用行为分析疗法。
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-1">
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <span class="text-xs text-dark/60 ml-1">5.0</span>
+                                </div>
+                                <button class="btn-hover text-primary text-sm hover:text-primary/80 transition-colors">
+                                    查看详情
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 教师卡片 2 -->
+                    <div class="bg-white rounded-2xl shadow-soft overflow-hidden card-hover">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/65/400/300" alt="王老师" class="w-full aspect-[4/3] object-cover btn-hover">
+                            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-dark/70 to-transparent p-4">
+                                <h3 class="text-white font-bold">王老师</h3>
+                                <p class="text-white/80 text-sm">情绪治疗师</p>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">情绪管理</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">心理辅导</span>
+                            </div>
+                            <p class="text-sm text-dark/70 mb-4 line-clamp-3">
+                                儿童发展心理学硕士，专注于孤独症儿童情绪识别与管理训练，擅长游戏治疗和艺术治疗。
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-1">
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star-half-o text-yellow-400 text-xs"></i>
+                                    <span class="text-xs text-dark/60 ml-1">4.5</span>
+                                </div>
+                                <button class="btn-hover text-primary text-sm hover:text-primary/80 transition-colors">
+                                    查看详情
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 教师卡片 3 -->
+                    <div class="bg-white rounded-2xl shadow-soft overflow-hidden card-hover">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/66/400/300" alt="刘老师" class="w-full aspect-[4/3] object-cover btn-hover">
+                            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-dark/70 to-transparent p-4">
+                                <h3 class="text-white font-bold">刘老师</h3>
+                                <p class="text-white/80 text-sm">言语治疗师</p>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">语言表达</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">沟通训练</span>
+                            </div>
+                            <p class="text-sm text-dark/70 mb-4 line-clamp-3">
+                                言语语言病理学专家，8年孤独症儿童语言干预经验，擅长非语言沟通和口语表达训练。
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-1">
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star-o text-yellow-400 text-xs"></i>
+                                    <span class="text-xs text-dark/60 ml-1">4.0</span>
+                                </div>
+                                <button class="btn-hover text-primary text-sm hover:text-primary/80 transition-colors">
+                                    查看详情
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 教师卡片 4 -->
+                    <div class="bg-white rounded-2xl shadow-soft overflow-hidden card-hover">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/26/400/300" alt="张老师" class="w-full aspect-[4/3] object-cover btn-hover">
+                            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-dark/70 to-transparent p-4">
+                                <h3 class="text-white font-bold">张老师</h3>
+                                <p class="text-white/80 text-sm">作业治疗师 (OT)</p>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">感官统合</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full btn-hover">动作训练</span>
+                            </div>
+                            <p class="text-sm text-dark/70 mb-4 line-clamp-3">
+                                作业治疗硕士，专注于孤独症儿童感官统合训练和精细动作发展，擅长设计有趣的互动活动。
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-1">
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                    <i class="fa fa-star-half-o text-yellow-400 text-xs"></i>
+                                    <span class="text-xs text-dark/60 ml-1">4.5</span>
+                                </div>
+                                <button class="btn-hover text-primary text-sm hover:text-primary/80 transition-colors">
+                                    查看详情
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 常见问题 -->
+        <section id="faq" class="py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold mb-4">常见问题</h2>
+                    <p class="text-dark/70">关于星聆云课堂的常见问题解答，如有其他疑问请联系我们</p>
+                </div>
+                
+                <div class="max-w-3xl mx-auto">
+                    <div class="space-y-4">
+                        <!-- FAQ项 1 -->
+                        <div class="bg-secondary rounded-xl overflow-hidden shadow-soft">
+                            <button class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
+                                <span class="font-medium">如何选择适合孩子的课程难度级别？</span>
+                                <i class="fa fa-plus text-primary transition-transform duration-300"></i>
+                            </button>
+                            <div class="faq-content hidden px-5 pb-5">
+                                <p class="text-dark/70 text-sm">
+                                    我们会根据孩子的初始评估结果推荐适合的课程级别（L1-L5）。L1适合刚接触干预训练的孩子，以基础认知和简单互动为主；随着孩子能力提升，可逐步升级到更高难度。系统会每4周自动评估并调整推荐级别，家长也可联系班主任申请重新评估。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- FAQ项 2 -->
+                        <div class="bg-secondary rounded-xl overflow-hidden shadow-soft">
+                            <button class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
+                                <span class="font-medium">错过直播课程可以回看吗？</span>
+                                <i class="fa fa-plus text-primary transition-transform duration-300"></i>
+                            </button>
+                            <div class="faq-content hidden px-5 pb-5">
+                                <p class="text-dark/70 text-sm">
+                                    可以的，所有直播课程都会在结束后1小时内生成回放视频，家长可在"我的课程-已结束"中查看，回放视频保留30天。对于重要的核心课程，我们还会提供课程讲义和家庭练习指导，帮助孩子巩固学习内容。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- FAQ项 3 -->
+                        <div class="bg-secondary rounded-xl overflow-hidden shadow-soft">
+                            <button class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
+                                <span class="font-medium">如何跟踪孩子的学习效果和进步？</span>
+                                <i class="fa fa-plus text-primary transition-transform duration-300"></i>
+                            </button>
+                            <div class="faq-content hidden px-5 pb-5">
+                                <p class="text-dark/70 text-sm">
+                                    我们提供多维度的学习跟踪系统：1) 每周生成学习报告，记录课程参与度和完成情况；2) 每两周进行一次技能评估，对比基线数据；3) 每月生成发展领域进度报告，展示各领域（语言、社交、认知等）的进步情况；4) 家长可随时查看详细数据图表和教师评语。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- FAQ项 4 -->
+                        <div class="bg-secondary rounded-xl overflow-hidden shadow-soft">
+                            <button class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
+                                <span class="font-medium">孩子上课不配合怎么办？有特殊支持吗？</span>
+                                <i class="fa fa-plus text-primary transition-transform duration-300"></i>
+                            </button>
+                            <div class="faq-content hidden px-5 pb-5">
+                                <p class="text-dark/70 text-sm">
+                                    我们的教师都接受过针对孤独症儿童行为特点的专业培训，擅长使用正向强化等方法引导孩子参与。对于有特殊需求的孩子，我们提供：1) 课前适应性准备建议；2) 一对一课前引导（需预约）；3) 根据孩子的兴趣调整课程内容；4) 提供课程辅助工具包（视觉提示卡等）。如遇到持续困难，可联系班主任安排个性化支持方案。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- FAQ项 5 -->
+                        <div class="bg-secondary rounded-xl overflow-hidden shadow-soft">
+                            <button class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
+                                <span class="font-medium">家长需要参与课程吗？如何配合？</span>
+                                <i class="fa fa-plus text-primary transition-transform duration-300"></i>
+                            </button>
+                            <div class="faq-content hidden px-5 pb-5">
+                                <p class="text-dark/70 text-sm">
+                                    家长的参与对孩子的进步至关重要。我们建议：1) 课前帮助孩子做好准备（调整状态、准备所需材料）；2) 课程中在旁陪伴但不过度干预，必要时给予少量提示；3) 课后根据教师提供的家庭延伸活动进行练习；4) 定期参加家长指导课，学习干预技巧；5) 通过家长社区分享经验和获取支持。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-10 text-center">
+                        <p class="text-dark/70 mb-4">还有其他问题？</p>
+                        <button class="btn-hover bg-primary text-white px-6 py-3 rounded-full font-medium shadow-md hover:shadow-strong transition-colors">
+                            联系客服咨询
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 行动召唤区 -->
+        <section class="py-16 bg-primary text-white relative overflow-hidden">
+            <!-- 装饰元素 -->
+            <div class="absolute top-0 left-0 w-full h-full">
+                <div class="absolute top-10 left-10 w-40 h-40 bg-white/5 rounded-full"></div>
+                <div class="absolute bottom-10 right-10 w-60 h-60 bg-white/5 rounded-full"></div>
+                <div class="absolute top-1/2 left-1/2 w-80 h-80 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+            </div>
+            
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold mb-6">
+                        开始孩子的个性化学习之旅
+                    </h2>
+                    <p class="text-white/80 text-lg mb-10">
+                        专业团队定制的干预课程，帮助孩子在关键发展期获得针对性支持
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button class="btn-hover bg-white text-primary font-bold px-8 py-3 rounded-full hover:bg-white/90 transition-all duration-300 shadow-strong text-lg hover:shadow-glow">
+                            免费体验课程
+                        </button>
+                        <button class="btn-hover bg-transparent border-2 border-white text-white font-bold px-8 py-3 rounded-full hover:bg-white/10 transition-all duration-300">
+                            预约专业评估
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+     <!-- 页脚 - 优化字体与图标 -->
+    <footer class="bg-dark text-light py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <!-- 品牌信息 - 增加浮动动画 -->
+                <div class="md:col-span-1">
+                    <a href="#home" class="flex items-center gap-2 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center float">
+                            <i class="fa fa-music text-light text-xl"></i>
+                        </div>
+                        <span class="text-xl font-comic font-bold text-light">星聆Stellin 🎵</span>
+                    </a>
+                    <p class="text-light/60 mb-6 font-comic">
+                        用AI声音疗愈，助力孤独症儿童社会融入 🌱
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <i class="fa fa-weixin"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <i class="fa fa-qq"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 - 优化字体 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 font-comic text-primary">快速链接 🔗</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-light/60 hover:text-light transition-colors font-comic">首页 🏠</a></li>
+                        <li><a href="#features" class="text-light/60 hover:text-light transition-colors font-comic">核心功能 ⭐</a></li>
+                        <li><a href="#impact" class="text-light/60 hover:text-light transition-colors font-comic">项目影响 🌱</a></li>
+                        <li><a href="#technology" class="text-light/60 hover:text-light transition-colors font-comic">技术创新 🚀</a></li>
+                        <li><a href="#guide" class="text-light/60 hover:text-light transition-colors font-comic">使用指南 📝</a></li>
+                        <li><a href="#testimonials" class="text-light/60 hover:text-light transition-colors font-comic">家长见证 💬</a></li>
+                        <li><a href="#register" class="text-light/60 hover:text-light transition-colors font-comic">免费试用 🎁</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 合作与支持 - 优化字体 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 font-comic text-primary">合作与支持 🤝</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">机构合作 🏥</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">公益合作 ❤️</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">加入我们 👥</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">用户手册 📖</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">常见问题 ❓</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 法律信息 - 优化字体 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 font-comic text-primary">法律信息 ⚖️</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">用户服务协议 📜</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">隐私政策 🔒</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">知识产权声明 📄</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">免责声明 ⚠️</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 版权信息 - 优化字体 -->
+            <div class="border-t border-light/10 pt-8 text-center text-light/60 text-sm font-comic">
+                <p>© 2025 星聆Stellin项目组. 保留所有权利. 江苏师范大学科文学院管理学院支持 🏫</p>
+            </div>
+        </div>
+    </footer>
+    <!-- 通知弹窗 -->
+    <div id="notificationModal" class="fixed inset-0 bg-dark/50 z-50 flex items-center justify-center modal-backdrop hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full mx-4 shadow-strong overflow-hidden transform transition-all scale-95 opacity-0" id="modalContent">
+            <div class="p-5 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="font-bold text-lg">通知消息</h3>
+                <button class="text-dark/60 hover:text-dark btn-hover" id="closeNotification">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="p-5 max-h-[70vh] overflow-y-auto">
+                <div class="space-y-4">
+                    <div class="p-3 bg-secondary rounded-lg border-l-4 border-primary">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-medium">课程提醒</h4>
+                            <span class="text-xs text-dark/60">今天 14:00</span>
+                        </div>
+                        <p class="text-sm text-dark/80">李老师的"社交互动基础：情绪识别与回应"课程即将开始，请做好准备。</p>
+                    </div>
+                    <div class="p-3 bg-secondary rounded-lg">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-medium">新课程上线</h4>
+                            <span class="text-xs text-dark/60">昨天 18:30</span>
+                        </div>
+                        <p class="text-sm text-dark/80">针对5-7岁儿童的"进阶社交技巧"系列课程已上线，适合您的孩子学习。</p>
+                    </div>
+                    <div class="p-3 bg-secondary rounded-lg">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-medium">月度评估报告</h4>
+                            <span class="text-xs text-dark/60">2023-06-10</span>
+                        </div>
+                        <p class="text-sm text-dark/80">您孩子的6月发展评估报告已生成，点击查看详细分析和建议。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-100 bg-secondary/50">
+                <button class="w-full text-primary text-sm py-2 btn-hover">
+                    查看全部通知
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 视频播放模态框 -->
+    <div id="videoModal" class="fixed inset-0 bg-dark/80 z-50 flex items-center justify-center modal-backdrop hidden">
+        <div class="max-w-4xl w-full mx-4" id="videoModalContent">
+            <div class="relative rounded-xl overflow-hidden">
+                <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-dark/70 text-white flex items-center justify-center z-10 btn-hover" id="closeVideo">
+                    <i class="fa fa-times"></i>
+                </button>
+                <div class="aspect-video bg-black">
+                    <img src="https://picsum.photos/id/237/1200/675" alt="课程视频" class="w-full h-full object-cover">
+                    <!-- 实际项目中这里会是video标签 -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <button class="w-20 h-20 rounded-full bg-primary/90 flex items-center justify-center text-white shadow-lg pulse btn-hover">
+                            <i class="fa fa-play text-2xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // 设置当前日期
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', options);
+            
+            // 初始化发展领域进度图表
+            const ctx = document.getElementById('developmentChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['语言表达', '社交互动', '认知发展', '感官统合', '情绪管理'],
+                    datasets: [{
+                        label: '当前水平',
+                        data: [65, 48, 72, 55, 42],
+                        backgroundColor: 'rgba(62, 124, 23, 0.2)',
+                        borderColor: '#3E7C17',
+                        pointBackgroundColor: '#3E7C17',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#3E7C17'
+                    }, {
+                        label: '同龄平均',
+                        data: [50, 50, 50, 50, 50],
+                        backgroundColor: 'rgba(153, 153, 153, 0.1)',
+                        borderColor: '#999',
+                        pointBackgroundColor: '#999',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#999',
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 10,
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // FAQ折叠面板
+            const faqToggles = document.querySelectorAll('.faq-toggle');
+            faqToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const content = toggle.nextElementSibling;
+                    const icon = toggle.querySelector('i');
+                    
+                    // 切换当前项
+                    content.classList.toggle('hidden');
+                    icon.classList.toggle('rotate-45');
+                    
+                    // 关闭其他项
+                    faqToggles.forEach(otherToggle => {
+                        if (otherToggle !== toggle) {
+                            otherToggle.nextElementSibling.classList.add('hidden');
+                            otherToggle.querySelector('i').classList.remove('rotate-45');
+                        }
+                    });
+                });
+            });
+            
+            // 移动端菜单
+            const menuBtn = document.getElementById('menuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            menuBtn.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.contains('hidden');
+                
+                if (isHidden) {
+                    // 显示菜单
+                    mobileMenu.classList.remove('hidden', 'scale-y-0', 'opacity-0');
+                    mobileMenu.classList.add('scale-y-100', 'opacity-100');
+                    menuBtn.innerHTML = '<i class="fa fa-times"></i>';
+                } else {
+                    // 隐藏菜单
+                    mobileMenu.classList.add('scale-y-0', 'opacity-0');
+                    mobileMenu.classList.remove('scale-y-100', 'opacity-100');
+                    setTimeout(() => {
+                        mobileMenu.classList.add('hidden');
+                    }, 300);
+                    menuBtn.innerHTML = '<i class="fa fa-bars"></i>';
+                }
+            });
+            
+            // 用户菜单
+            const userMenuBtn = document.getElementById('userMenuBtn');
+            const userMenu = document.getElementById('userMenu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('hidden');
+            });
+            
+            // 点击其他区域关闭用户菜单
+            document.addEventListener('click', (e) => {
+                if (!userMenuBtn.contains(e.target) && !userMenu.contains(e.target)) {
+                    userMenu.classList.add('hidden');
+                }
+            });
+            
+            // 通知弹窗
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationModal = document.getElementById('notificationModal');
+            const modalContent = document.getElementById('modalContent');
+            const closeNotification = document.getElementById('closeNotification');
+            
+            notificationBtn.addEventListener('click', () => {
+                notificationModal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            });
+            
+            closeNotification.addEventListener('click', closeNotificationModal);
+            
+            notificationModal.addEventListener('click', (e) => {
+                if (e.target === notificationModal) {
+                    closeNotificationModal();
+                }
+            });
+            
+            function closeNotificationModal() {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    notificationModal.classList.add('hidden');
+                }, 300);
+            }
+            
+            // 视频播放模态框
+            const courseVideoPreview = document.getElementById('courseVideoPreview');
+            const videoModal = document.getElementById('videoModal');
+            const videoModalContent = document.getElementById('videoModalContent');
+            const closeVideo = document.getElementById('closeVideo');
+            
+            courseVideoPreview.addEventListener('click', () => {
+                videoModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            });
+            
+            closeVideo.addEventListener('click', closeVideoModal);
+            
+            videoModal.addEventListener('click', (e) => {
+                if (e.target === videoModal) {
+                    closeVideoModal();
+                }
+            });
+            
+            function closeVideoModal() {
+                videoModal.classList.add('hidden');
+                document.body.style.overflow = ''; // 恢复滚动
+            }
+            
+            // 课程轮播控制
+            const prevCourse = document.getElementById('prev-course');
+            const nextCourse = document.getElementById('next-course');
+            
+            prevCourse.addEventListener('click', () => {
+                showToast('已显示上一页课程');
+            });
+            
+            nextCourse.addEventListener('click', () => {
+                showToast('已显示下一页课程');
+            });
+            
+            // 查看学员列表
+            const viewStudents = document.getElementById('viewStudents');
+            viewStudents.addEventListener('click', () => {
+                showToast('查看8名学员列表');
+            });
+            
+            // 教师资料查看
+            const teacherProfile = document.getElementById('teacherProfile');
+            teacherProfile.addEventListener('click', () => {
+                showToast('查看李老师详细资料');
+            });
+            
+            // 图表交互
+            const chartContainer = document.getElementById('chartContainer');
+            chartContainer.addEventListener('click', () => {
+                showToast('查看详细发展数据');
+            });
+            
+            // 滚动时导航栏变化
+            window.addEventListener('scroll', () => {
+                const navbar = document.getElementById('navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('py-2', 'shadow-medium');
+                    navbar.classList.remove('py-4', 'shadow-soft');
+                } else {
+                    navbar.classList.add('py-4', 'shadow-soft');
+                    navbar.classList.remove('py-2', 'shadow-medium');
+                }
+            });
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId !== '#') {
+                        document.querySelector(targetId).scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                        
+                        // 关闭移动菜单
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('scale-y-0', 'opacity-0');
+                            mobileMenu.classList.remove('scale-y-100', 'opacity-100');
+                            setTimeout(() => {
+                                mobileMenu.classList.add('hidden');
+                            }, 300);
+                            menuBtn.innerHTML = '<i class="fa fa-bars"></i>';
+                        }
+                    }
+                });
+            });
+            
+            // 显示提示消息
+            function showToast(message) {
+                // 创建toast元素
+                let toast = document.createElement('div');
+                toast.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-dark text-white px-4 py-2 rounded-lg shadow-strong z-50 opacity-0 transition-opacity duration-300';
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                // 显示toast
+                setTimeout(() => {
+                    toast.classList.replace('opacity-0', 'opacity-100');
+                }, 10);
+                
+                // 3秒后隐藏toast
+                setTimeout(() => {
+                    toast.classList.replace('opacity-100', 'opacity-0');
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                    }, 300);
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

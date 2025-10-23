@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星聆Stellin - AI动态声景生成</title>
+    <!-- 引入外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    
+    <!-- 自定义Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3E7C17',    // 主色：生机绿
+                        secondary: '#F5F9F2',  // 辅助色：浅柔绿
+                        accent: '#8FBF7B',     // 强调色：淡青绿
+                        dark: '#2D4A22',       // 深色：深绿（文字/边框）
+                        light: '#FFFFFF',      // 白色：背景/卡片
+                        yellow: '#FBBF24',     // 新增：黄色（装饰元素）
+                        blue: '#3B82F6',       // 新增：蓝色（点缀元素）
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['"Comic Sans MS"', '"Marker Felt"', 'cursive'], // 儿童友好字体
+                        comic: ['"Comic Sans MS"', '"Marker Felt"', 'cursive'], // 新增：卡通字体
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(62, 124, 23, 0.08)',
+                        'medium': '0 8px 30px rgba(62, 124, 23, 0.12)',
+                        'strong': '0 12px 40px rgba(62, 124, 23, 0.15)',
+                        'glow': '0 0 15px rgba(62, 124, 23, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+<!-- 自定义样式 - 新增趣味动画与装饰 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(62, 124, 23, 0.15);
+            }
+            .audio-btn {
+                animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.7; }
+            }
+            .step-active {
+                border-color: #3E7C17;
+                background-color: #3E7C17;
+                color: white;
+            }
+            .nav-link-active {
+                color: #3E7C17;
+                font-weight: 500;
+            }
+            .scroll-container {
+                overflow: hidden;
+                position: relative;
+            }
+            .scroll-images {
+                display: flex;
+                animation: scroll 20s linear infinite;
+            }
+            .scroll-images:hover {
+                animation-play-state: paused;
+            }
+            @keyframes scroll {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+            /* 侧边组件动画 */
+            .side-widget {
+                transition: all 0.4s ease;
+            }
+            .side-widget:hover {
+                transform: scale(1.03);
+                box-shadow: 0 8px 16px rgba(62, 124, 23, 0.12);
+            }
+            .decor-photo {
+                transition: transform 0.5s ease;
+            }
+            .decor-photo:hover {
+                transform: scale(1.05) rotate(2deg);
+            }
+            /* 初始隐藏侧边组件，仅在目标区域显示 */
+            .testimonial-sidebar {
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.5s ease, visibility 0.5s ease;
+            }
+            .testimonial-sidebar.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* 新增：儿童友好动画 */
+            .float {
+                animation: float 3s ease-in-out infinite;
+            }
+            @keyframes float {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-12px); }
+                100% { transform: translateY(0px); }
+            }
+            .wiggle {
+                animation: wiggle 3s ease-in-out infinite;
+            }
+            @keyframes wiggle {
+                0%, 100% { transform: rotate(-4deg); }
+                50% { transform: rotate(4deg); }
+            }
+            .card-pop {
+                transition: all 0.4s ease;
+            }
+            .card-pop:hover {
+                transform: scale(1.06);
+                box-shadow: 0 20px 35px rgba(62, 124, 23, 0.25);
+            }
+            .star {
+                position: absolute;
+                background-color: #FBBF24;
+                clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+                animation: twinkle 2s infinite alternate;
+            }
+            @keyframes twinkle {
+                from { opacity: 0.6; transform: scale(0.9); }
+                to { opacity: 1; transform: scale(1.1); }
+            }
+            .cloud {
+                position: absolute;
+                background: white;
+                border-radius: 50%;
+                box-shadow: 
+                    10px 10px 0 0 white,
+                    20px 10px 0 0 white,
+                    30px 10px 0 0 white,
+                    10px 0 0 0 white,
+                    20px 0 0 0 white,
+                    30px 0 0 0 white;
+                width: 50px;
+                height: 30px;
+                opacity: 0.8;
+                animation: cloud-float 15s linear infinite;
+            }
+            @keyframes cloud-float {
+                0% { transform: translateX(-100px); }
+                100% { transform: translateX(120vw); }
+            }
+            .sound-wave {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                height: 24px;
+            }
+            .sound-bar {
+                width: 4px;
+                background-color: #3E7C17;
+                border-radius: 4px;
+                animation: sound 1s infinite ease-in-out;
+            }
+            @keyframes sound {
+                0%, 100% { height: 6px; }
+                50% { height: 24px; }
+            }
+            .step-item {
+                transition: all 0.4s ease;
+            }
+            .step-item:hover {
+                transform: translateY(-10px) rotate(1deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-secondary font-sans text-dark bg-pattern">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all 0.3s ease bg-transparent">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- 品牌Logo - 增加浮动动画 -->
+                <a href="#home" class="flex items-center gap-2">
+                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center float border-2 border-accent/30">
+                        <i class="fa fa-music text-light text-xl"></i>
+                    </div>
+                    <span class="text-[clamp(1.2rem,3vw,1.5rem)] font-comic font-bold text-primary">星聆Stellin 🎵</span>
+                </a>
+                
+                <!-- 桌面端导航 - 增加图标与卡通字体 -->
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="#home" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="home">首页 🏠</a>
+                    <a href="#features" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="features">核心功能 ⭐</a>
+                    <a href="#impact" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="impact">项目影响 🌱</a>
+                    <a href="#technology" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="technology">技术创新 🚀</a>
+                    <a href="#guide" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="guide">使用指南 📝</a>
+                    <a href="#testimonials" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="testimonials">家长见证 💬</a>
+                    <a href="#contact" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="contact">联系我们 📞</a>
+                    <a href="#register" class="bg-primary text-light px-5 py-2 rounded-full hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg font-comic text-lg">
+                        免费注册 🎁
+                    </a>
+                </nav>
+                
+                <!-- 移动端菜单按钮 - 优化样式 -->
+                <button id="menuBtn" class="md:hidden text-primary text-2xl focus:outline-none">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单（默认隐藏）- 增加卡通字体 -->
+        <div id="mobileMenu" class="hidden md:hidden bg-light shadow-lg absolute w-full border-t border-primary/20">
+            <div class="container mx-auto px-4 py-3 flex flex-col gap-3">
+                <a href="#home" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="home">首页 🏠</a>
+                <a href="#features" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="features">核心功能 ⭐</a>
+                <a href="#impact" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="impact">项目影响 🌱</a>
+                <a href="#technology" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="technology">技术创新 🚀</a>
+                <a href="#guide" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="guide">使用指南 📝</a>
+                <a href="#testimonials" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="testimonials">家长见证 💬</a>
+                <a href="#contact" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="contact">联系我们 📞</a>
+                <a href="#register" class="bg-primary text-light px-5 py-2 rounded-full text-center hover:bg-primary/90 transition-colors mt-2 font-comic text-lg">
+                    免费注册 🎁
+                </a>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- 页面主体内容 -->
+    <main class="pt-24 pb-16">
+        <!-- 功能介绍头部 -->
+        <section class="py-16 bg-white overflow-hidden">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- 面包屑导航 -->
+                <div class="text-sm text-dark/60 mb-8">
+                    <a href="index.html" class="hover:text-primary transition-colors">首页</a> 
+                    <span class="mx-2">/</span> 
+                    <a href="index.html#features" class="hover:text-primary transition-colors">核心功能</a> 
+                    <span class="mx-2">/</span> 
+                    <span class="text-primary">AI动态声景生成</span>
+                </div>
+                
+                <div class="flex flex-col lg:flex-row items-center gap-12">
+                    <div class="lg:w-1/2">
+                        <span class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-4 animate-fade-in">
+                            核心功能
+                        </span>
+                        <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-display font-bold mb-6 text-shadow leading-tight">
+                            AI动态声景生成
+                        </h1>
+                        <p class="text-lg text-dark/80 leading-relaxed mb-6">
+                            基于孩子情绪状态实时生成的适应性声音环境，通过精心设计的音频元素，帮助孤独症儿童调节情绪、提升专注度并建立感官安全感。
+                        </p>
+                        <p class="text-lg text-dark/80 leading-relaxed mb-8">
+                            系统能智能感知孩子的状态变化，动态调整声音元素，创造最适合当前需求的声学环境，无论是放松、专注还是情绪安抚。
+                        </p>
+                        
+                        <!-- 特色标签 -->
+                        <div class="flex flex-wrap gap-3 mb-8">
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm flex items-center gap-1 sound-pill">
+                                <i class="fa fa-sliders"></i> 实时调整
+                            </span>
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm flex items-center gap-1 sound-pill">
+                                <i class="fa fa-heart"></i> 情绪适配
+                            </span>
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm flex items-center gap-1 sound-pill">
+                                <i class="fa fa-volume-up"></i> 安全音量
+                            </span>
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm flex items-center gap-1 sound-pill">
+                                <i class="fa fa-refresh"></i> 动态变化
+                            </span>
+                        </div>
+                        
+                        <a href="#sound-generator" class="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full hover:bg-primary/90 transition-all duration-300 shadow-medium hover:shadow-strong hover:translate-y-[-2px]">
+                            体验声景生成
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="lg:w-1/2 rounded-2xl overflow-hidden shadow-strong relative transform hover:shadow-glow transition-all duration-500">
+                        <img src="https://picsum.photos/id/175/800/500" alt="AI动态声景生成" class="w-full h-auto transform hover:scale-105 transition-transform duration-700">
+                        <!-- 浮动提示框 -->
+                        <div class="absolute -top-4 -right-4 bg-primary text-white p-3 rounded-lg shadow-strong float-animation hidden md:block">
+                            <p class="text-sm font-medium flex items-center gap-1">
+                                <i class="fa fa-lightbulb-o"></i> 基于神经科学设计
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 声景优势 -->
+        <section class="py-20 bg-secondary relative overflow-hidden">
+            <!-- 装饰元素 -->
+            <div class="absolute top-20 left-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-10 right-10 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
+            
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+                        为什么选择我们
+                    </span>
+                    <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold mb-6">
+                        为特殊需求定制的声音环境
+                    </h2>
+                    <p class="text-dark/70 text-lg">
+                        我们理解孤独症儿童对声音的特殊敏感性，通过科学设计的声音元素，创造安全、舒适且有益的听觉体验
+                    </p>
+                </div>
+                
+                <!-- 2x2网格布局 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-soft card-hover border-l-4 border-primary">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 transform hover:scale-110 transition-transform duration-300">
+                            <i class="fa fa-bolt text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">实时情绪响应</h3>
+                        <p class="text-dark/70 mb-4">
+                            系统通过摄像头和麦克风实时感知孩子的情绪状态变化，当检测到焦虑或不安信号时，会自动调整声音元素，引入更多安抚性声音，帮助孩子平复情绪。
+                        </p>
+                        <!-- 贴心提示插件 -->
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <div class="flex items-start gap-2">
+                                <div class="tooltip text-primary mt-1 cursor-help group">
+                                    <i class="fa fa-info-circle text-lg group-hover:scale-125 transition-transform"></i>
+                                    <span class="tooltiptext absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-dark text-white text-xs p-2 rounded shadow-lg opacity-0 invisible transition-all duration-300 pointer-events-none">
+                                        研究表明，特定频率的自然声音能有效降低焦虑水平
+                                    </span>
+                                </div>
+                                <p class="text-sm text-dark/60">情绪识别准确率达89%以上</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-8 rounded-2xl shadow-soft card-hover border-l-4 border-primary">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 transform hover:scale-110 transition-transform duration-300">
+                            <i class="fa fa-sliders text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">个性化参数调节</h3>
+                        <p class="text-dark/70 mb-4">
+                            支持精细调节音量范围、频率响应和声音复杂度等参数，根据每个孩子的感官敏感度定制声音环境。系统会记录孩子对不同声音的反应，自动优化参数设置。
+                        </p>
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <div class="flex items-start gap-2">
+                                <div class="tooltip text-primary mt-1 cursor-help group">
+                                    <i class="fa fa-info-circle text-lg group-hover:scale-125 transition-transform"></i>
+                                    <span class="tooltiptext absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-dark text-white text-xs p-2 rounded shadow-lg opacity-0 invisible transition-all duration-300 pointer-events-none">
+                                        每个孩子的听觉敏感度差异可达300%以上
+                                    </span>
+                                </div>
+                                <p class="text-sm text-dark/60">超过20项可调节参数，精准适配需求</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-8 rounded-2xl shadow-soft card-hover border-l-4 border-primary">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 transform hover:scale-110 transition-transform duration-300">
+                            <i class="fa fa-puzzle-piece text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">结构化声音元素</h3>
+                        <p class="text-dark/70 mb-4">
+                            所有声音元素均经过精心筛选和处理，避免突然的音量变化和刺耳频率。声音组合遵循可预测的模式，为孩子创造稳定、安全的听觉环境，减少感官过载风险。
+                        </p>
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <div class="flex items-start gap-2">
+                                <div class="tooltip text-primary mt-1 cursor-help group">
+                                    <i class="fa fa-info-circle text-lg group-hover:scale-125 transition-transform"></i>
+                                    <span class="tooltiptext absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-dark text-white text-xs p-2 rounded shadow-lg opacity-0 invisible transition-all duration-300 pointer-events-none">
+                                        结构化声音能减少70%的感官防御反应
+                                    </span>
+                                </div>
+                                <p class="text-sm text-dark/60">所有声音经过听觉脱敏处理</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-8 rounded-2xl shadow-soft card-hover border-l-4 border-primary">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 transform hover:scale-110 transition-transform duration-300">
+                            <i class="fa fa-graduation-cap text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">发展性声景设计</h3>
+                        <p class="text-dark/70 mb-4">
+                            声景难度随孩子的适应能力逐步提升，从简单、单一的声音开始，逐渐增加复杂度和多样性，帮助孩子逐步提高听觉耐受能力和感官处理能力。
+                        </p>
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <div class="flex items-start gap-2">
+                                <div class="tooltip text-primary mt-1 cursor-help group">
+                                    <i class="fa fa-info-circle text-lg group-hover:scale-125 transition-transform"></i>
+                                    <span class="tooltiptext absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-dark text-white text-xs p-2 rounded shadow-lg opacity-0 invisible transition-all duration-300 pointer-events-none">
+                                        渐进式训练可使听觉耐受能力提升40%
+                                    </span>
+                                </div>
+                                <p class="text-sm text-dark/60">5个难度等级，自动适配孩子进展</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 声景类型 -->
+        <section class="py-20 bg-white overflow-hidden relative">
+            <!-- 背景装饰元素 -->
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <div class="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full"></div>
+                <div class="absolute bottom-10 right-10 w-80 h-80 bg-primary/5 rounded-full"></div>
+            </div>
+            
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+                        多样化声景
+                    </span>
+                    <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold mb-6">
+                        五大功能性声景类型
+                    </h2>
+                    <p class="text-dark/70 text-lg">
+                        针对不同场景和需求设计的专业声景，每种声景都有明确的应用目标和科学依据
+                    </p>
+                </div>
+                
+                <!-- 声景类型卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 放松安抚声景 -->
+                    <div class="bg-white rounded-2xl shadow-soft overflow-hidden card-hover border border-gray-100 group">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://picsum.photos/id/184/600/400" alt="放松安抚声景" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-bold">放松安抚声景</h3>
+                                <p class="text-sm text-white/80">情绪调节 · 焦虑缓解</p>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-dark/70 mb-4">
+                                以低频自然声音为基础（如细雨、溪流、温和的风声），配合特定频率的音乐元素，帮助孩子放松身心，缓解焦虑和情绪波动。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">低频为主</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">节奏缓慢</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">5-15分钟</span>
+                            </div>
+                            <a href="#sound-generator" class="block text-center bg-primary/10 text-primary py-2 rounded-lg hover:bg-primary/20 transition-colors" data-sound-type="relax">
+                                体验此声景
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- 专注学习声景 -->
+                    <div class="bg-white rounded-2xl shadow-soft overflow-hidden card-hover border border-gray-100 group">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://picsum.photos/id/3/600/400" alt="专注学习声景" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-bold">专注学习声景</h3>
+                                <p class="text-sm text-white/80">注意力提升 · 学习辅助</p>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-dark/70 mb-4">
+                                包含稳定的中等频率背景声（如轻柔的咖啡馆环境声、稳定的白噪音），屏蔽干扰性声音，创造有利于集中注意力的声学环境。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">中频稳定</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">屏蔽干扰</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">15-45分钟</span>
+                            </div>
+                            <a href="#sound-generator" class="block text-center bg-primary/10 text-primary py-2 rounded-lg hover:bg-primary/20 transition-colors" data-sound-type="focus">
+                                体验此声景
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- 感官探索声景 -->
+                    <div class="bg-white rounded-2xl shadow-soft overflow-hidden card-hover border border-gray-100 group">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://picsum.photos/id/110/600/400" alt="感官探索声景" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-bold">感官探索声景</h3>
+                                <p class="text-sm text-white/80">感官整合 · 认知发展</p>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-dark/70 mb-4">
+                                包含多种自然声音元素（如鸟鸣、海浪、树叶声），以可预测的方式组合，帮助孩子安全地探索和适应多样化的声音环境。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">元素多样</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">可预测变化</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">10-20分钟</span>
+                            </div>
+                            <a href="#sound-generator" class="block text-center bg-primary/10 text-primary py-2 rounded-lg hover:bg-primary/20 transition-colors" data-sound-type="explore">
+                                体验此声景
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- 社交准备声景 -->
+                    <div class="bg-white rounded-2xl shadow-soft overflow-hidden card-hover border border-gray-100 group">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://picsum.photos/id/26/600/400" alt="社交准备声景" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-bold">社交准备声景</h3>
+                                <p class="text-sm text-white/80">社交适应 · 情绪准备</p>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-dark/70 mb-4">
+                                包含低强度的社交声音元素（如远处的交谈声、轻柔的笑声），逐渐增加社交声音的复杂度，帮助孩子为真实社交场景做准备。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">社交元素</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">渐进增强</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">5-15分钟</span>
+                            </div>
+                            <a href="#sound-generator" class="block text-center bg-primary/10 text-primary py-2 rounded-lg hover:bg-primary/20 transition-colors" data-sound-type="social">
+                                体验此声景
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- 睡眠辅助声景 -->
+                    <div class="bg-white rounded-2xl shadow-soft overflow-hidden card-hover border border-gray-100 group">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://picsum.photos/id/177/600/400" alt="睡眠辅助声景" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-bold">睡眠辅助声景</h3>
+                                <p class="text-sm text-white/80">入睡引导 · 睡眠维持</p>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-dark/70 mb-4">
+                                以持续、低变化的声音为基础（如持续的雨声、白噪音），配合逐渐减弱的音量和频率，帮助孩子放松并进入睡眠状态，减少夜间惊醒。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">低变化</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">逐渐减弱</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">30-60分钟</span>
+                            </div>
+                            <a href="#sound-generator" class="block text-center bg-primary/10 text-primary py-2 rounded-lg hover:bg-primary/20 transition-colors" data-sound-type="sleep">
+                                体验此声景
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- 自定义组合声景 -->
+                    <div class="bg-white rounded-2xl shadow-soft overflow-hidden card-hover border border-primary/30 relative group">
+                        <div class="absolute top-4 right-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-soft z-10">
+                            热门
+                        </div>
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://picsum.photos/id/160/600/400" alt="自定义组合声景" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-bold">自定义组合声景</h3>
+                                <p class="text-sm text-white/80">个性化 · 灵活组合</p>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-dark/70 mb-4">
+                                允许家长和专业人士选择和组合不同声音元素，创建完全个性化的声景。可保存多个自定义方案，满足不同场景的需求。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">自由组合</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">可保存</span>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">自定义时长</span>
+                            </div>
+                            <a href="#sound-generator" class="block text-center bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                                创建自定义声景
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 声景生成器 -->
+        <section id="sound-generator" class="py-20 bg-secondary">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold text-center mb-4">
+                    AI动态声景生成器
+                </h2>
+                <p class="text-center text-dark/70 text-lg max-w-3xl mx-auto mb-16">
+                    根据孩子当前状态和需求，实时生成最适合的声音环境
+                </p>
+                
+                <!-- 生成器界面 -->
+                <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-medium overflow-hidden transform hover:shadow-strong transition-all duration-500">
+                    <div class="p-6">
+                        <div class="flex flex-col lg:flex-row gap-6">
+                            <!-- 控制面板 -->
+                            <div class="lg:w-1/3 bg-secondary p-6 rounded-xl">
+                                <h3 class="font-bold text-lg mb-6 flex items-center gap-2">
+                                    <i class="fa fa-sliders text-primary"></i>
+                                    声景设置
+                                </h3>
+                                
+                                <!-- 声景类型选择 -->
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium mb-3">声景类型</label>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <button class="sound-type-btn bg-primary text-white p-3 rounded-lg text-sm transition-all duration-300 hover:shadow-md" data-type="relax">
+                                            <i class="fa fa-heart-o mr-1"></i> 放松安抚
+                                        </button>
+                                        <button class="sound-type-btn bg-white text-dark p-3 rounded-lg text-sm transition-all duration-300 hover:bg-gray-50 hover:shadow-sm" data-type="focus">
+                                            <i class="fa fa-eye mr-1"></i> 专注学习
+                                        </button>
+                                        <button class="sound-type-btn bg-white text-dark p-3 rounded-lg text-sm transition-all duration-300 hover:bg-gray-50 hover:shadow-sm" data-type="explore">
+                                            <i class="fa fa-compass mr-1"></i> 感官探索
+                                        </button>
+                                        <button class="sound-type-btn bg-white text-dark p-3 rounded-lg text-sm transition-all duration-300 hover:bg-gray-50 hover:shadow-sm" data-type="social">
+                                            <i class="fa fa-users mr-1"></i> 社交准备
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- 情绪状态 -->
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium mb-3">孩子当前情绪</label>
+                                    <select id="mood-select" class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 hover:border-primary/30">
+                                        <option value="calm">平静放松</option>
+                                        <option value="anxious">有些焦虑</option>
+                                        <option value="overstimulated">感官过载</option>
+                                        <option value="inattentive">注意力分散</option>
+                                        <option value="sleepy">准备入睡</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- 声音元素 -->
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium mb-3">声音元素</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white/50 transition-colors">
+                                            <input type="checkbox" class="sound-element w-4 h-4 text-primary rounded focus:ring-primary" checked value="rain">
+                                            <span>雨声</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white/50 transition-colors">
+                                            <input type="checkbox" class="sound-element w-4 h-4 text-primary rounded focus:ring-primary" checked value="stream">
+                                            <span>溪流</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white/50 transition-colors">
+                                            <input type="checkbox" class="sound-element w-4 h-4 text-primary rounded focus:ring-primary" value="birds">
+                                            <span>鸟鸣</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white/50 transition-colors">
+                                            <input type="checkbox" class="sound-element w-4 h-4 text-primary rounded focus:ring-primary" value="wind">
+                                            <span>风声</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white/50 transition-colors">
+                                            <input type="checkbox" class="sound-element w-4 h-4 text-primary rounded focus:ring-primary" value="music">
+                                            <span>轻音乐</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <!-- 高级设置折叠面板 -->
+                                <div class="mb-6">
+                                    <button id="advanced-toggle" class="flex justify-between items-center w-full text-sm font-medium text-primary p-2 rounded-lg hover:bg-white/50 transition-colors">
+                                        <span>高级设置</span>
+                                        <i class="fa fa-chevron-down transition-transform duration-300"></i>
+                                    </button>
+                                    <div id="advanced-settings" class="hidden mt-4 space-y-4">
+                                        <!-- 音量 -->
+                                        <div>
+                                            <div class="flex justify-between text-xs mb-1">
+                                                <span>音量</span>
+                                                <span id="volume-value">40%</span>
+                                            </div>
+                                            <input type="range" min="10" max="70" value="40" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary" id="volume-control" style="::-webkit-slider-thumb: slider-thumb;">
+                                        </div>
+                                        
+                                        <!-- 复杂度 -->
+                                        <div>
+                                            <div class="flex justify-between text-xs mb-1">
+                                                <span>声音复杂度</span>
+                                                <span id="complexity-value">中等</span>
+                                            </div>
+                                            <input type="range" min="1" max="5" value="3" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary" id="complexity-control">
+                                            <div class="flex justify-between text-xs text-dark/50 mt-1">
+                                                <span>简单</span>
+                                                <span>复杂</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- 变化频率 -->
+                                        <div>
+                                            <div class="flex justify-between text-xs mb-1">
+                                                <span>变化频率</span>
+                                                <span id="variation-value">低</span>
+                                            </div>
+                                            <input type="range" min="1" max="5" value="2" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary" id="variation-control">
+                                            <div class="flex justify-between text-xs text-dark/50 mt-1">
+                                                <span>稳定</span>
+                                                <span>多变</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 时长设置 -->
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium mb-3">播放时长</label>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <button class="duration-btn bg-primary text-white p-2 rounded-lg text-sm transition-all duration-300 hover:shadow-md" data-duration="10">10分钟</button>
+                                        <button class="duration-btn bg-white text-dark p-2 rounded-lg text-sm transition-all duration-300 hover:bg-gray-50 hover:shadow-sm" data-duration="20">20分钟</button>
+                                        <button class="duration-btn bg-white text-dark p-2 rounded-lg text-sm transition-all duration-300 hover:bg-gray-50 hover:shadow-sm" data-duration="30">30分钟</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- 生成按钮 -->
+                                <button id="generate-btn" class="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 shadow-md flex items-center justify-center gap-2 hover:shadow-lg hover:translate-y-[-2px]">
+                                    <i class="fa fa-magic"></i>
+                                    生成声景
+                                </button>
+                            </div>
+                            
+                            <!-- 声景播放区 -->
+                            <div class="lg:w-2/3 bg-secondary p-6 rounded-xl">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h3 class="font-bold text-lg flex items-center gap-2">
+                                        <i class="fa fa-volume-up text-primary"></i>
+                                        <span id="soundscape-title">放松安抚声景</span>
+                                    </h3>
+                                    <span id="sound-status" class="bg-gray-200 text-dark/60 text-xs px-2 py-1 rounded-full">未播放</span>
+                                </div>
+                                
+                                <!-- 声景可视化 -->
+                                <div class="bg-white p-6 rounded-lg mb-6 flex flex-col items-center justify-center min-h-[180px] shadow-soft relative overflow-hidden">
+                                    <!-- 装饰元素 -->
+                                    <div class="absolute top-0 left-0 w-full h-full pointer-events-none opacity-5">
+                                        <div class="absolute top-5 left-5 w-10 h-10 rounded-full bg-primary"></div>
+                                        <div class="absolute bottom-5 right-5 w-15 h-15 rounded-full bg-primary"></div>
+                                    </div>
+                                    
+                                    <div id="audio-visualization" class="flex items-end justify-center h-32 w-full max-w-md mb-4">
+                                        <span class="wave-bar wave-animation" style="animation-delay: 0s; height: 15px;"></span>
+                                        <span class="wave-bar wave-animation" style="animation-delay: 0.1s; height: 25px;"></span>
+                                        <span class="wave-bar wave-animation" style="animation-delay: 0.2s; height: 20px;"></span>
+                                        <span class="wave-bar wave-animation" style="animation-delay: 0.3s; height: 30px;"></span>
+                                        <span class="wave-bar wave-animation" style="animation-delay: 0.4s; height: 15px;"></span>
+                                        <span class="wave-bar wave-animation" style="animation-delay: 0.5s; height: 20px;"></span>
+                                        <span class="wave-bar wave-animation" style="animation-delay: 0.6s; height: 10px;"></span>
+                                        <span class="wave-bar wave-animation" style="animation-delay: 0.7s; height: 25px;"></span>
+                                        <span class="wave-bar wave-animation" style="animation-delay: 0.8s; height: 15px;"></span>
+                                        <span class="wave-bar wave-animation" style="animation-delay: 0.9s; height: 20px;"></span>
+                                        <span class="wave-bar wave-animation" style="animation-delay: 1.0s; height: 30px;"></span>
+                                        <span class="wave-bar wave-animation" style="animation-delay: 1.1s; height: 25px;"></span>
+                                        <span class="wave-bar wave-animation" style="animation-delay: 1.2s; height: 15px;"></span>
+                                    </div>
+                                    <div class="text-center text-sm text-dark/60 mb-2">
+                                        <span id="current-time">00:00</span> / <span id="total-time">10:00</span>
+                                    </div>
+                                    <div class="w-full max-w-md bg-gray-200 rounded-full h-1.5 mb-2 cursor-pointer" id="progress-container">
+                                        <div id="progress-bar" class="bg-primary h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 播放控制 -->
+                                <div class="flex justify-center items-center gap-6 mb-8">
+                                    <button class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary shadow-soft hover:bg-primary hover:text-white transition-all duration-300 transform hover:scale-110">
+                                        <i class="fa fa-step-backward"></i>
+                                    </button>
+                                    <button id="play-btn" class="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white shadow-medium hover:bg-primary/90 transition-all duration-300 text-xl transform hover:scale-105">
+                                        <i class="fa fa-play"></i>
+                                    </button>
+                                    <button class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary shadow-soft hover:bg-primary hover:text-white transition-all duration-300 transform hover:scale-110">
+                                        <i class="fa fa-step-forward"></i>
+                                    </button>
+                                </div>
+                                
+                                <!-- 声景描述和建议 -->
+                                <div class="bg-white p-4 rounded-lg shadow-soft transform hover:shadow-md transition-all duration-300">
+                                    <h4 class="font-medium text-sm mb-2 flex items-center gap-1">
+                                        <i class="fa fa-info-circle text-primary"></i>
+                                        声景说明
+                                    </h4>
+                                    <p id="sound-description" class="text-sm text-dark/70 mb-3">
+                                        此放松安抚声景结合了轻柔的雨声和溪流声，频率稳定在500-1500Hz之间，音量适中，有助于缓解焦虑情绪，营造平静的环境。
+                                    </p>
+                                    <div class="p-3 bg-primary/5 rounded-lg text-xs text-dark/70">
+                                        <p class="font-medium mb-1">使用建议：</p>
+                                        <p>适合在孩子情绪波动或焦虑时使用，可配合深呼吸练习效果更佳。建议在安静的环境中播放，保持环境光线柔和。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 使用记录 -->
+                <div class="max-w-5xl mx-auto mt-8 bg-white p-6 rounded-xl shadow-soft transform hover:shadow-medium transition-all duration-500">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-lg">使用记录与效果分析</h3>
+                        <button class="text-primary text-sm hover:underline flex items-center gap-1 transition-all duration-300 hover:translate-x-1">
+                            查看完整记录
+                            <i class="fa fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="px-4 py-3 bg-secondary text-left text-xs font-medium text-dark/70 uppercase tracking-wider rounded-tl-lg">日期时间</th>
+                                    <th class="px-4 py-3 bg-secondary text-left text-xs font-medium text-dark/70 uppercase tracking-wider">声景类型</th>
+                                    <th class="px-4 py-3 bg-secondary text-left text-xs font-medium text-dark/70 uppercase tracking-wider">时长</th>
+                                    <th class="px-4 py-3 bg-secondary text-left text-xs font-medium text-dark/70 uppercase tracking-wider">使用效果</th>
+                                    <th class="px-4 py-3 bg-secondary text-left text-xs font-medium text-dark/70 uppercase tracking-wider rounded-tr-lg">备注</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-secondary/30 transition-colors">
+                                    <td class="px-4 py-3 text-sm text-dark/80">2023-06-15 19:30</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">放松安抚</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-dark/80">15分钟</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="text-green-600 flex items-center gap-1">
+                                            <i class="fa fa-arrow-up"></i> 情绪改善
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-dark/60">睡前使用，入睡时间缩短</td>
+                                </tr>
+                                <tr class="hover:bg-secondary/30 transition-colors">
+                                    <td class="px-4 py-3 text-sm text-dark/80">2023-06-14 16:45</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">专注学习</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-dark/80">25分钟</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="text-green-600 flex items-center gap-1">
+                                            <i class="fa fa-arrow-up"></i> 专注提升
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-dark/60">完成作业时使用，分心减少</td>
+                                </tr>
+                                <tr class="hover:bg-secondary/30 transition-colors">
+                                    <td class="px-4 py-3 text-sm text-dark/80">2023-06-13 10:15</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">感官探索</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-dark/80">10分钟</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="text-yellow-600 flex items-center gap-1">
+                                            <i class="fa fa-minus"></i> 无明显变化
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-dark/60">首次尝试，孩子保持中立态度</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- 效果分析 -->
+                    <div class="mt-6 p-4 bg-secondary rounded-lg">
+                        <h4 class="font-medium text-sm mb-3 flex items-center gap-1">
+                            <i class="fa fa-line-chart text-primary"></i>
+                            本周效果分析
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-white p-3 rounded-lg shadow-soft hover:shadow-md transition-all duration-300">
+                                <p class="text-xs text-dark/60 mb-1">平均情绪改善率</p>
+                                <p class="text-xl font-bold text-primary">68%</p>
+                                <p class="text-xs text-green-600 flex items-center gap-1 mt-1">
+                                    <i class="fa fa-arrow-up"></i> 较上周提升12%
+                                </p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow-soft hover:shadow-md transition-all duration-300">
+                                <p class="text-xs text-dark/60 mb-1">平均专注时长</p>
+                                <p class="text-xl font-bold text-primary">+8分钟</p>
+                                <p class="text-xs text-green-600 flex items-center gap-1 mt-1">
+                                    <i class="fa fa-arrow-up"></i> 较上周提升3分钟
+                                </p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow-soft hover:shadow-md transition-all duration-300">
+                                <p class="text-xs text-dark/60 mb-1">推荐声景类型</p>
+                                <p class="text-lg font-bold text-primary">放松安抚</p>
+                                <p class="text-xs text-dark/60 mt-1">最适合当前需求</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 效果图表 -->
+                        <div class="mt-6 bg-white p-4 rounded-lg shadow-soft">
+                            <h5 class="text-xs font-medium mb-3">情绪改善趋势</h5>
+                            <div class="h-40">
+                                <canvas id="moodChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 科学依据 -->
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col lg:flex-row items-center gap-12">
+                    <div class="lg:w-1/2 order-2 lg:order-1">
+                        <span class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+                            科学依据
+                        </span>
+                        <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold mb-6">
+                            基于神经科学的声景设计
+                        </h2>
+                        <p class="text-dark/80 leading-relaxed mb-6">
+                            我们的声景生成系统基于最新的听觉神经科学研究，针对孤独症儿童的听觉处理特点，精心设计每一个声音元素，确保安全性和有效性。
+                        </p>
+                        
+                        <div class="space-y-5 mb-8">
+                            <div class="bg-secondary p-5 rounded-xl shadow-soft hover:shadow-medium transition-all duration-300 transform hover:translate-x-1">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                        <i class="fa fa-brain text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold mb-2">听觉整合疗法</h4>
+                                        <p class="text-dark/70 text-sm">
+                                            基于伯纳德·瑞姆兰博士的听觉整合训练理论，通过特定频率的声音刺激，帮助改善听觉过敏和感官处理异常，研究显示可使70%的使用者症状得到改善。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-secondary p-5 rounded-xl shadow-soft hover:shadow-medium transition-all duration-300 transform hover:translate-x-1">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                        <i class="fa fa-heartbeat text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold mb-2">自主神经系统调节</h4>
+                                        <p class="text-dark/70 text-sm">
+                                            特定频率和节奏的声音能调节副交感神经活动，降低心率和皮质醇水平，促进放松反应。我们的声景设计特别关注60-80拍/分钟的自然节奏，与静息心率同步。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-secondary p-5 rounded-xl shadow-soft hover:shadow-medium transition-all duration-300 transform hover:translate-x-1">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                        <i class="fa fa-child text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold mb-2">发展心理学应用</h4>
+                                        <p class="text-dark/70 text-sm">
+                                            遵循维果茨基的"最近发展区"理论，声景难度随孩子的适应能力逐步提升，确保挑战适中，既不过度刺激也不过于简单，最大化训练效果。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <a href="#" class="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full hover:bg-primary/90 transition-all duration-300 shadow-medium hover:shadow-strong hover:translate-y-[-2px]">
+                            查看研究文献
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="lg:w-1/2 order-1 lg:order-2">
+                        <div class="bg-secondary rounded-2xl p-6 shadow-medium relative transform hover:shadow-strong transition-all duration-500">
+                            <div class="absolute -top-3 -right-3 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-soft">
+                                研究支持
+                            </div>
+                            <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                                <i class="fa fa-flask text-primary"></i>
+                                临床效果数据
+                            </h3>
+                            
+                            <div class="space-y-6">
+                                <!-- 图表容器 -->
+                                <div class="bg-white p-4 rounded-lg shadow-soft hover:shadow-md transition-all duration-300">
+                                    <h4 class="font-medium mb-4 text-sm">情绪调节效果对比</h4>
+                                    <div class="h-64 relative">
+                                        <!-- 使用Chart.js绘制图表 -->
+                                        <canvas id="effectivenessChart"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="bg-white p-4 rounded-lg shadow-soft hover:shadow-md transition-all duration-300 transform hover:scale-[1.02]">
+                                        <h4 class="font-medium mb-2 text-sm">焦虑水平降低</h4>
+                                        <p class="text-3xl font-bold text-primary mb-1">47<span class="text-lg">%</span></p>
+                                        <p class="text-xs text-dark/60">基于30天使用数据</p>
+                                    </div>
+                                    
+                                    <div class="bg-white p-4 rounded-lg shadow-soft hover:shadow-md transition-all duration-300 transform hover:scale-[1.02]">
+                                        <h4 class="font-medium mb-2 text-sm">专注时长提升</h4>
+                                        <p class="text-3xl font-bold text-primary mb-1">+52<span class="text-lg">%</span></p>
+                                        <p class="text-xs text-dark/60">学习场景平均数据</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-white p-4 rounded-lg shadow-soft hover:shadow-md transition-all duration-300">
+                                    <h4 class="font-medium mb-3 text-sm">专业人士评价</h4>
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <img src="https://picsum.photos/id/64/60/60" alt="专家头像" class="w-12 h-12 rounded-full object-cover ring-2 ring-primary/20">
+                                        <div>
+                                            <p class="font-medium text-sm">李教授，儿童心理学博士</p>
+                                            <div class="flex text-yellow-400 text-xs mt-1">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-dark/70 italic">
+                                        "该系统的声景设计符合孤独症儿童的听觉处理特点，在临床使用中表现出显著的情绪调节效果，是传统干预方法的有效补充。"
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 行动召唤区 -->
+        <section class="py-20 bg-primary text-white relative overflow-hidden">
+            <!-- 装饰元素 -->
+            <div class="absolute top-0 left-0 w-full h-full">
+                <div class="absolute top-10 left-10 w-40 h-40 bg-white/5 rounded-full"></div>
+                <div class="absolute bottom-10 right-10 w-60 h-60 bg-white/5 rounded-full"></div>
+                <div class="absolute top-1/2 left-1/2 w-80 h-80 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+            </div>
+            
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold mb-6">
+                        为孩子创造舒适的声音世界
+                    </h2>
+                    <p class="text-white/80 text-lg mb-10">
+                        让AI动态声景成为孩子情绪调节和感官适应的得力助手，开启更舒适的日常体验
+                    </p>
+                    
+                    <a href="index.html#contact" class="inline-flex items-center gap-2 bg-white text-primary font-bold px-8 py-3 rounded-full hover:bg-white/90 transition-all duration-300 shadow-strong text-lg hover:shadow-glow hover:translate-y-[-3px]">
+                        免费试用14天
+                        <i class="fa fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+      <!-- 页脚 - 优化字体与图标 -->
+    <footer class="bg-dark text-light py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <!-- 品牌信息 - 增加浮动动画 -->
+                <div class="md:col-span-1">
+                    <a href="#home" class="flex items-center gap-2 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center float">
+                            <i class="fa fa-music text-light text-xl"></i>
+                        </div>
+                        <span class="text-xl font-comic font-bold text-light">星聆Stellin 🎵</span>
+                    </a>
+                    <p class="text-light/60 mb-6 font-comic">
+                        用AI声音疗愈，助力孤独症儿童社会融入 🌱
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <i class="fa fa-weixin"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <i class="fa fa-qq"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 - 优化字体 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 font-comic text-primary">快速链接 🔗</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-light/60 hover:text-light transition-colors font-comic">首页 🏠</a></li>
+                        <li><a href="#features" class="text-light/60 hover:text-light transition-colors font-comic">核心功能 ⭐</a></li>
+                        <li><a href="#impact" class="text-light/60 hover:text-light transition-colors font-comic">项目影响 🌱</a></li>
+                        <li><a href="#technology" class="text-light/60 hover:text-light transition-colors font-comic">技术创新 🚀</a></li>
+                        <li><a href="#guide" class="text-light/60 hover:text-light transition-colors font-comic">使用指南 📝</a></li>
+                        <li><a href="#testimonials" class="text-light/60 hover:text-light transition-colors font-comic">家长见证 💬</a></li>
+                        <li><a href="#register" class="text-light/60 hover:text-light transition-colors font-comic">免费试用 🎁</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 合作与支持 - 优化字体 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 font-comic text-primary">合作与支持 🤝</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">机构合作 🏥</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">公益合作 ❤️</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">加入我们 👥</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">用户手册 📖</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">常见问题 ❓</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 法律信息 - 优化字体 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 font-comic text-primary">法律信息 ⚖️</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">用户服务协议 📜</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">隐私政策 🔒</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">知识产权声明 📄</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors font-comic">免责声明 ⚠️</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 版权信息 - 优化字体 -->
+            <div class="border-t border-light/10 pt-8 text-center text-light/60 text-sm font-comic">
+                <p>© 2025 星聆Stellin项目组. 保留所有权利. 江苏师范大学科文学院管理学院支持 🏫</p>
+            </div>
+        </div>
+    </footer>
+    <!-- JavaScript -->
+    <script>
+        // 初始化图表
+        document.addEventListener('DOMContentLoaded', function() {
+            // 情绪改善趋势图表
+            const moodCtx = document.getElementById('moodChart').getContext('2d');
+            new Chart(moodCtx, {
+                type: 'line',
+                data: {
+                    labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                    datasets: [{
+                        label: '情绪改善率',
+                        data: [45, 52, 49, 60, 55, 68, 72],
+                        borderColor: '#3E7C17',
+                        backgroundColor: 'rgba(62, 124, 23, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                font: {
+                                    size: 8
+                                }
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 8
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 效果对比图表
+            const effectivenessCtx = document.getElementById('effectivenessChart').getContext('2d');
+            new Chart(effectivenessCtx, {
+                type: 'line',
+                data: {
+                    labels: ['基线', '1周', '2周', '3周', '4周', '5周', '6周'],
+                    datasets: [
+                        {
+                            label: '对照组',
+                            data: [50, 52, 51, 53, 52, 54, 53],
+                            borderColor: '#9CA3AF',
+                            backgroundColor: 'transparent',
+                            tension: 0.4
+                        },
+                        {
+                            label: '使用声景系统',
+                            data: [50, 58, 65, 72, 78, 82, 85],
+                            borderColor: '#3E7C17',
+                            backgroundColor: 'transparent',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 10
+                                },
+                                boxWidth: 10
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: '情绪稳定度',
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            ticks: {
+                                font: {
+                                    size: 9
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 9
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // 声景数据
+        const soundscapeData = {
+            relax: {
+                title: "放松安抚声景",
+                description: "此放松安抚声景结合了轻柔的雨声和溪流声，频率稳定在500-1500Hz之间，音量适中，有助于缓解焦虑情绪，营造平静的环境。",
+                elements: ["rain", "stream"],
+                duration: 10,
+                visualization: [15, 25, 20, 30, 15, 20, 10, 25, 15, 20, 30, 25, 15]
+            },
+            focus: {
+                title: "专注学习声景",
+                description: "专注学习声景采用稳定的中等频率背景声，包含低强度的咖啡馆环境声和柔和的白噪音元素，有效屏蔽干扰，提升注意力持续时间。",
+                elements: ["cafe", "whitenoise"],
+                duration: 20,
+                visualization: [20, 25, 20, 25, 20, 25, 20, 25, 20, 25, 20, 25, 20]
+            },
+            explore: {
+                title: "感官探索声景",
+                description: "感官探索声景包含多种自然声音元素，如鸟鸣、海浪和树叶声，以可预测的模式组合，帮助孩子安全地探索多样化的声音环境。",
+                elements: ["rain", "birds", "wind"],
+                duration: 15,
+                visualization: [30, 20, 40, 25, 35, 20, 30, 25, 40, 20, 30, 25, 35]
+            },
+            social: {
+                title: "社交准备声景",
+                description: "社交准备声景包含低强度的社交声音元素，如远处的交谈声和轻柔的笑声，声音逐渐变化，帮助孩子为真实社交场景做好准备。",
+                elements: ["voices", "laughter", "music"],
+                duration: 10,
+                visualization: [10, 15, 20, 15, 25, 20, 15, 30, 25, 20, 15, 20, 15]
+            },
+            sleep: {
+                title: "睡眠辅助声景",
+                description: "睡眠辅助声景以持续的雨声为基础，配合逐渐减弱的音量和频率，创造稳定的听觉环境，帮助孩子放松并进入深度睡眠状态。",
+                elements: ["rain", "stream", "whitenoise"],
+                duration: 30,
+                visualization: [10, 15, 10, 15, 10, 15, 10, 15, 10, 15, 10, 15, 10]
+            }
+        };
+
+        // 1. 移动端菜单切换
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.contains('hidden');
+            
+            if (isHidden) {
+                // 显示菜单
+                mobileMenu.classList.remove('hidden', 'scale-y-0', 'opacity-0');
+                mobileMenu.classList.add('scale-y-100', 'opacity-100');
+                menuBtn.innerHTML = '<i class="fa fa-times"></i>';
+            } else {
+                // 隐藏菜单
+                mobileMenu.classList.add('scale-y-0', 'opacity-0');
+                mobileMenu.classList.remove('scale-y-100', 'opacity-100');
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                }, 300);
+                menuBtn.innerHTML = '<i class="fa fa-bars"></i>';
+            }
+        });
+        
+        // 2. 声景类型选择
+        const soundTypeBtns = document.querySelectorAll('.sound-type-btn');
+        const soundscapeTitle = document.getElementById('soundscape-title');
+        const soundDescription = document.getElementById('sound-description');
+        const audioVisualization = document.getElementById('audio-visualization');
+        const totalTimeDisplay = document.getElementById('total-time');
+        
+        // 声景卡片链接
+        document.querySelectorAll('[data-sound-type]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const soundType = this.getAttribute('data-sound-type');
+                updateSoundscape(soundType);
+                
+                // 更新按钮状态
+                soundTypeBtns.forEach(btn => {
+                    if (btn.getAttribute('data-type') === soundType) {
+                        btn.classList.remove('bg-white', 'text-dark', 'hover:bg-gray-50', 'hover:shadow-sm');
+                        btn.classList.add('bg-primary', 'text-white', 'hover:shadow-md');
+                    } else {
+                        btn.classList.remove('bg-primary', 'text-white', 'hover:shadow-md');
+                        btn.classList.add('bg-white', 'text-dark', 'hover:bg-gray-50', 'hover:shadow-sm');
+                    }
+                });
+                
+                // 滚动到生成器
+                document.getElementById('sound-generator').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // 声景按钮点击事件
+        soundTypeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 更新按钮样式
+                soundTypeBtns.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-white', 'hover:shadow-md');
+                    b.classList.add('bg-white', 'text-dark', 'hover:bg-gray-50', 'hover:shadow-sm');
+                });
+                btn.classList.remove('bg-white', 'text-dark', 'hover:bg-gray-50', 'hover:shadow-sm');
+                btn.classList.add('bg-primary', 'text-white', 'hover:shadow-md');
+                
+                // 更新声景
+                const soundType = btn.getAttribute('data-type');
+                updateSoundscape(soundType);
+            });
+        });
+        
+        // 更新声景内容
+        function updateSoundscape(type) {
+            const data = soundscapeData[type];
+            if (!data) return;
+            
+            // 更新标题和描述（带动画）
+            soundscapeTitle.style.opacity = '0';
+            soundDescription.style.opacity = '0';
+            
+            setTimeout(() => {
+                soundscapeTitle.textContent = data.title;
+                soundDescription.textContent = data.description;
+                
+                soundscapeTitle.style.transition = 'opacity 0.3s ease';
+                soundDescription.style.transition = 'opacity 0.3s ease';
+                soundscapeTitle.style.opacity = '1';
+                soundDescription.style.opacity = '1';
+            }, 200);
+            
+            // 更新总时长
+            totalTimeDisplay.textContent = `${data.duration}:00`;
+            
+            // 更新时长按钮状态
+            durationBtns.forEach(btn => {
+                if (parseInt(btn.getAttribute('data-duration')) === data.duration) {
+                    btn.classList.remove('bg-white', 'text-dark', 'hover:bg-gray-50', 'hover:shadow-sm');
+                    btn.classList.add('bg-primary', 'text-white', 'hover:shadow-md');
+                } else {
+                    btn.classList.remove('bg-primary', 'text-white', 'hover:shadow-md');
+                    btn.classList.add('bg-white', 'text-dark', 'hover:bg-gray-50', 'hover:shadow-sm');
+                }
+            });
+            
+            // 更新可视化波形（带动画）
+            const bars = audioVisualization.querySelectorAll('.wave-bar');
+            bars.forEach((bar, index) => {
+                bar.style.transition = 'height 0.5s ease';
+                setTimeout(() => {
+                    bar.style.height = `${data.visualization[index]}px`;
+                }, index * 50);
+            });
+            
+            // 更新声音元素选择
+            document.querySelectorAll('.sound-element').forEach(checkbox => {
+                checkbox.checked = data.elements.includes(checkbox.value);
+            });
+            
+            // 重置播放状态
+            resetPlayer();
+        }
+        
+        // 3. 时长选择
+        const durationBtns = document.querySelectorAll('.duration-btn');
+        
+        durationBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 更新按钮样式
+                durationBtns.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-white', 'hover:shadow-md');
+                    b.classList.add('bg-white', 'text-dark', 'hover:bg-gray-50', 'hover:shadow-sm');
+                });
+                btn.classList.remove('bg-white', 'text-dark', 'hover:bg-gray-50', 'hover:shadow-sm');
+                btn.classList.add('bg-primary', 'text-white', 'hover:shadow-md');
+                
+                // 更新总时长
+                const duration = btn.getAttribute('data-duration');
+                totalTimeDisplay.textContent = `${duration}:00`;
+                
+                // 重置播放状态
+                resetPlayer();
+            });
+        });
+        
+        // 4. 高级设置折叠面板
+        const advancedToggle = document.getElementById('advanced-toggle');
+        const advancedSettings = document.getElementById('advanced-settings');
+        
+        advancedToggle.addEventListener('click', () => {
+            const isHidden = advancedSettings.classList.contains('hidden');
+            
+            if (isHidden) {
+                // 显示高级设置
+                advancedSettings.classList.remove('hidden');
+                advancedSettings.style.maxHeight = '0';
+                setTimeout(() => {
+                    advancedSettings.style.transition = 'maxHeight 0.3s ease';
+                    advancedSettings.style.maxHeight = advancedSettings.scrollHeight + 'px';
+                }, 10);
+            } else {
+                // 隐藏高级设置
+                advancedSettings.style.maxHeight = '0';
+                setTimeout(() => {
+                    advancedSettings.classList.add('hidden');
+                    advancedSettings.style.transition = 'none';
+                }, 300);
+            }
+            
+            // 切换箭头方向
+            const icon = advancedToggle.querySelector('i');
+            icon.classList.toggle('rotate-180');
+        });
+        
+        // 5. 滑块控制
+        const volumeControl = document.getElementById('volume-control');
+        const volumeValue = document.getElementById('volume-value');
+        const complexityControl = document.getElementById('complexity-control');
+        const complexityValue = document.getElementById('complexity-value');
+        const variationControl = document.getElementById('variation-control');
+        const variationValue = document.getElementById('variation-value');
+        
+        // 音量滑块
+        volumeControl.addEventListener('input', () => {
+            volumeValue.textContent = `${volumeControl.value}%`;
+            
+            // 视觉反馈：改变波形高度
+            if (isPlaying) {
+                updateVisualizationWithVolume();
+            }
+        });
+        
+        // 根据音量更新可视化
+        function updateVisualizationWithVolume() {
+            const bars = audioVisualization.querySelectorAll('.wave-bar');
+            const volume = volumeControl.value / 100;
+            
+            bars.forEach(bar => {
+                const baseHeight = parseInt(bar.style.height) || 20;
+                bar.style.height = `${baseHeight * volume * 1.5}px`;
+            });
+        }
+        
+        // 复杂度滑块
+        const complexityLabels = ['简单', '较简单', '中等', '较复杂', '复杂'];
+        complexityControl.addEventListener('input', () => {
+            complexityValue.textContent = complexityLabels[complexityControl.value - 1];
+            
+            // 视觉反馈：改变波形复杂度
+            if (isPlaying) {
+                updateVisualizationWithComplexity();
+            }
+        });
+        
+        function updateVisualizationWithComplexity() {
+            const bars = audioVisualization.querySelectorAll('.wave-bar');
+            const complexity = parseInt(complexityControl.value);
+            
+            bars.forEach((bar, index) => {
+                const baseHeight = parseInt(bar.style.height) || 20;
+                const randomFactor = 0.5 + (complexity / 5) * 0.5; // 0.5 to 1.0
+                const newHeight = baseHeight * (0.7 + Math.random() * randomFactor);
+                bar.style.height = `${newHeight}px`;
+            });
+        }
+        
+        // 变化频率滑块
+        const variationLabels = ['极低', '低', '中等', '高', '极高'];
+        variationControl.addEventListener('input', () => {
+            variationValue.textContent = variationLabels[variationControl.value - 1];
+        });
+        
+        // 6. 播放控制
+        const playBtn = document.getElementById('play-btn');
+        const soundStatus = document.getElementById('sound-status');
+        const progressBar = document.getElementById('progress-bar');
+        const currentTimeDisplay = document.getElementById('current-time');
+        const progressContainer = document.getElementById('progress-container');
+        let isPlaying = false;
+        let progressInterval;
+        let currentProgress = 0;
+        
+        playBtn.addEventListener('click', togglePlay);
+        
+        // 进度条点击跳转
+        progressContainer.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            currentProgress = pos * 100;
+            progressBar.style.width = `${currentProgress}%`;
+            
+            // 更新当前时间
+            const totalMinutes = parseInt(totalTimeDisplay.textContent);
+            const currentSeconds = Math.floor((totalMinutes * 60) * (currentProgress / 100));
+            const minutes = Math.floor(currentSeconds / 60);
+            const seconds = currentSeconds % 60;
+            currentTimeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        });
+        
+        function togglePlay() {
+            if (isPlaying) {
+                // 暂停
+                stopPlayback();
+            } else {
+                // 播放
+                startPlayback();
+            }
+        }
+        
+        function startPlayback() {
+            isPlaying = true;
+            playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+            soundStatus.textContent = '播放中';
+            soundStatus.className = 'bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full';
+            
+            // 启动进度更新
+            progressInterval = setInterval(() => {
+                currentProgress += 0.1;
+                if (currentProgress > 100) {
+                    currentProgress = 100;
+                    stopPlayback();
+                }
+                progressBar.style.width = `${currentProgress}%`;
+                
+                // 更新当前时间
+                const totalMinutes = parseInt(totalTimeDisplay.textContent);
+                const currentSeconds = Math.floor((totalMinutes * 60) * (currentProgress / 100));
+                const minutes = Math.floor(currentSeconds / 60);
+                const seconds = currentSeconds % 60;
+                currentTimeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // 根据复杂度更新波形
+                updateVisualizationWithComplexity();
+            }, 1000);
+            
+            // 激活波形动画
+            document.querySelectorAll('.wave-bar').forEach(bar => {
+                bar.style.animationPlayState = 'running';
+            });
+            
+            // 应用音量设置
+            updateVisualizationWithVolume();
+        }
+        
+        function stopPlayback() {
+            isPlaying = false;
+            playBtn.innerHTML = '<i class="fa fa-play"></i>';
+            soundStatus.textContent = '已暂停';
+            soundStatus.className = 'bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full';
+            
+            // 停止进度更新
+            clearInterval(progressInterval);
+        }
+        
+        function resetPlayer() {
+            stopPlayback();
+            currentProgress = 0;
+            progressBar.style.width = '0%';
+            currentTimeDisplay.textContent = '00:00';
+            
+            // 重置波形动画
+            document.querySelectorAll('.wave-bar').forEach(bar => {
+                bar.style.animationPlayState = 'paused';
+            });
+        }
+        
+        // 7. 生成按钮
+        const generateBtn = document.getElementById('generate-btn');
+        
+        generateBtn.addEventListener('click', () => {
+            // 显示加载状态
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i> 生成中...';
+            
+            // 模拟生成过程中更新波形
+            const bars = audioVisualization.querySelectorAll('.wave-bar');
+            const generateInterval = setInterval(() => {
+                bars.forEach(bar => {
+                    bar.style.height = `${Math.random() * 30 + 5}px`;
+                });
+            }, 200);
+            
+            // 模拟生成过程
+            setTimeout(() => {
+                // 清除波形更新
+                clearInterval(generateInterval);
+                
+                // 恢复按钮状态
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '<i class="fa fa-magic"></i> 生成声景';
+                
+                // 显示成功消息并添加动画
+                soundStatus.textContent = '生成成功';
+                soundStatus.className = 'bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full animate-pulse';
+                
+                // 3秒后移除动画
+                setTimeout(() => {
+                    soundStatus.classList.remove('animate-pulse');
+                }, 3000);
+                
+                // 重置播放器
+                resetPlayer();
+                
+                // 更新当前选择的声景波形
+                const activeType = document.querySelector('.sound-type-btn.bg-primary').getAttribute('data-type');
+                if (activeType && soundscapeData[activeType]) {
+                    const data = soundscapeData[activeType];
+                    bars.forEach((bar, index) => {
+                        bar.style.transition = 'height 0.5s ease';
+                        setTimeout(() => {
+                            bar.style.height = `${data.visualization[index]}px`;
+                        }, index * 50);
+                    });
+                }
+            }, 1500);
+        });
+        
+        // 8. 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId !== '#') {
+                    document.querySelector(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // 如果是移动菜单，点击后关闭
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('scale-y-0', 'opacity-0');
+                        mobileMenu.classList.remove('scale-y-100', 'opacity-100');
+                        setTimeout(() => {
+                            mobileMenu.classList.add('hidden');
+                        }, 300);
+                        menuBtn.innerHTML = '<i class="fa fa-bars"></i>';
+                    }
+                }
+            });
+        });
+        
+        // 9. 滚动时导航栏样式变化
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2', 'shadow-medium');
+                navbar.classList.remove('py-4', 'shadow-soft');
+            } else {
+                navbar.classList.add('py-4', 'shadow-soft');
+                navbar.classList.remove('py-2', 'shadow-medium');
+            }
+        });
+        
+        // 10. 提示工具交互
+        document.querySelectorAll('.tooltip').forEach(tooltip => {
+            tooltip.addEventListener('mouseenter', () => {
+                const tooltipText = tooltip.querySelector('.tooltiptext');
+                tooltipText.classList.remove('opacity-0', 'invisible');
+                tooltipText.classList.add('opacity-100', 'visible');
+            });
+            
+            tooltip.addEventListener('mouseleave', () => {
+                const tooltipText = tooltip.querySelector('.tooltiptext');
+                tooltipText.classList.add('opacity-0', 'invisible');
+                tooltipText.classList.remove('opacity-100', 'visible');
+            });
+        });
+        
+        // 11. 初始化滑块样式
+        const sliders = document.querySelectorAll('input[type="range"]');
+        sliders.forEach(slider => {
+            slider.style.webkitAppearance = 'none';
+            slider.style.appearance = 'none';
+            
+            // 设置滑块thumb样式
+            slider.style.webkitSliderThumb = 'slider-thumb';
+        });
+    </script>
+</body>
+</html>
