@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星聆Stellin - AI声音疗愈赋能孤独症儿童</title>
+    <!-- 引入外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    
+    <!-- 自定义Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3E7C17',    // 主色：生机绿
+                        secondary: '#F5F9F2',  // 辅助色：浅柔绿
+                        accent: '#8FBF7B',     // 强调色：淡青绿
+                        dark: '#2D4A22',       // 深色：深绿（文字/边框）
+                        light: '#FFFFFF',      // 白色：背景/卡片
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['"Comic Sans MS"', 'cursive'], // 儿童友好字体
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义样式 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(62, 124, 23, 0.15);
+            }
+            .audio-btn {
+                animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.7; }
+            }
+            .step-active {
+                border-color: #3E7C17;
+                background-color: #3E7C17;
+                color: white;
+            }
+            .nav-link-active {
+                color: #3E7C17;
+                font-weight: 500;
+            }
+            .scroll-container {
+                overflow: hidden;
+                position: relative;
+            }
+            .scroll-images {
+                display: flex;
+                animation: scroll 20s linear infinite;
+            }
+            .scroll-images:hover {
+                animation-play-state: paused;
+            }
+            @keyframes scroll {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+            /* 侧边组件动画 */
+            .side-widget {
+                transition: all 0.4s ease;
+            }
+            .side-widget:hover {
+                transform: scale(1.03);
+                box-shadow: 0 8px 16px rgba(62, 124, 23, 0.12);
+            }
+            .decor-photo {
+                transition: transform 0.5s ease;
+            }
+            .decor-photo:hover {
+                transform: scale(1.05) rotate(2deg);
+            }
+            /* 初始隐藏侧边组件，仅在目标区域显示 */
+            .testimonial-sidebar {
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.5s ease, visibility 0.5s ease;
+            }
+            .testimonial-sidebar.active {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-secondary font-sans text-dark relative">
+    <!-- 左侧侧边组件：仅在家长见证板块显示 -->
+    <div class="testimonial-sidebar fixed left-4 top-1/3 -translate-y-1/3 hidden lg:block z-20 max-w-xs">
+        <!-- 左侧装饰照片（自然主题，贴合声景功能） -->
+        <div class="mb-6 rounded-xl overflow-hidden shadow-lg decor-photo">
+            <img src="C:\Users\money\Desktop\小挑\夏天简约自然风绿色树叶树枝清新自然背景（仅供交流学习非商用）.jpg" 
+                 alt="自然声景装饰图" 
+                 class="w-full h-auto">
+        </div>
+        
+        <!-- 左侧小贴士1：训练时间建议 -->
+        <div class="bg-white p-5 rounded-xl shadow-md mb-5 side-widget">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                    <i class="fa fa-clock-o text-primary text-lg"></i>
+                </div>
+                <h4 class="font-bold text-lg text-dark">训练时间小贴士</h4>
+            </div>
+            <p class="text-dark/70 text-sm leading-relaxed">
+                建议每天选择孩子情绪平稳的时段（如上午10点、下午3点）进行15-20分钟声景训练，避免在饭后或困倦时训练，效果更佳。
+            </p>
+        </div>
+        
+        <!-- 左侧小贴士2：家长陪伴技巧 -->
+        <div class="bg-white p-5 rounded-xl shadow-md side-widget">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                    <i class="fa fa-handshake-o text-primary text-lg"></i>
+                </div>
+                <h4 class="font-bold text-lg text-dark">家长陪伴技巧</h4>
+            </div>
+            <p class="text-dark/70 text-sm leading-relaxed">
+                孩子训练时，家长可坐在身旁轻声陪伴，避免频繁打扰；训练后用简单语言鼓励（如“宝宝今天听得很认真！”），增强孩子参与感。
+            </p>
+        </div>
+    </div>
+
+    <!-- 右侧侧边组件：仅在家长见证板块显示 -->
+    <div class="testimonial-sidebar fixed right-4 top-1/3 -translate-y-1/3 hidden lg:block z-20 max-w-xs">
+        <!-- 右侧装饰照片（社交训练主题） -->
+        <div class="mb-6 rounded-xl overflow-hidden shadow-lg decor-photo">
+            <img src="C:\Users\money\Desktop\小挑\DSC06907.JPG" 
+                 alt="社交训练装饰图" 
+                 class="w-full h-auto">
+        </div>
+        
+        <!-- 右侧小贴士1：声景选择建议 -->
+        <div class="bg-white p-5 rounded-xl shadow-md mb-5 side-widget">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                    <i class="fa fa-headphones text-primary text-lg"></i>
+                </div>
+                <h4 class="font-bold text-lg text-dark">声景选择指南</h4>
+            </div>
+            <p class="text-dark/70 text-sm leading-relaxed">
+                感官敏感严重的孩子建议从“轻柔雨声”“溪流声”等低频声景开始；适应后再尝试“课堂背景音”“超市环境音”等复杂声景，逐步提升适应能力。
+            </p>
+        </div>
+        
+        <!-- 右侧小贴士2：进度跟踪技巧 -->
+        <div class="bg-white p-5 rounded-xl shadow-md side-widget">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                    <i class="fa fa-line-chart text-primary text-lg"></i>
+                </div>
+                <h4 class="font-bold text-lg text-dark">进度跟踪技巧</h4>
+            </div>
+            <p class="text-dark/70 text-sm leading-relaxed">
+                每周记录孩子对1-2种声音的反应（如“听到吹风机声不再哭闹”），结合平台生成的成长报告，更直观看到孩子进步，及时调整训练方案。
+            </p>
+        </div>
+    </div>
+
+    <!-- 导航栏（固定顶部，滚动时变化样式） -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all 0.3s ease bg-transparent">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- 品牌Logo -->
+                <a href="#home" class="flex items-center gap-2">
+                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                        <i class="fa fa-music text-light text-xl"></i>
+                    </div>
+                    <span class="text-[clamp(1.2rem,3vw,1.5rem)] font-display font-bold text-primary">星聆Stellin</span>
+                </a>
+                
+                <!-- 桌面端导航 -->
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="#home" class="nav-link text-dark hover:text-primary transition-colors" data-target="home">首页</a>
+                    <a href="#features" class="nav-link text-dark hover:text-primary transition-colors" data-target="features">核心功能</a>
+                    <a href="#impact" class="nav-link text-dark hover:text-primary transition-colors" data-target="impact">项目影响</a>
+                    <a href="#technology" class="nav-link text-dark hover:text-primary transition-colors" data-target="technology">技术创新</a>
+                    <a href="#guide" class="nav-link text-dark hover:text-primary transition-colors" data-target="guide">使用指南</a>
+                    <a href="#testimonials" class="nav-link text-dark hover:text-primary transition-colors" data-target="testimonials">家长见证</a>
+                    <a href="#contact" class="nav-link text-dark hover:text-primary transition-colors" data-target="contact">联系我们</a>
+                    <a href="#register" class="bg-primary text-light px-5 py-2 rounded-full hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg">
+                        免费注册
+                    </a>
+                </nav>
+                
+                <!-- 移动端菜单按钮 -->
+                <button id="menuBtn" class="md:hidden text-primary text-2xl focus:outline-none">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单（默认隐藏） -->
+        <div id="mobileMenu" class="hidden md:hidden bg-light shadow-lg absolute w-full">
+            <div class="container mx-auto px-4 py-3 flex flex-col gap-3">
+                <a href="#home" class="mobile-nav-link py-2 hover:text-primary transition-colors" data-target="home">首页</a>
+                <a href="#features" class="mobile-nav-link py-2 hover:text-primary transition-colors" data-target="features">核心功能</a>
+                <a href="#impact" class="mobile-nav-link py-2 hover:text-primary transition-colors" data-target="impact">项目影响</a>
+                <a href="#technology" class="mobile-nav-link py-2 hover:text-primary transition-colors" data-target="technology">技术创新</a>
+                <a href="#guide" class="mobile-nav-link py-2 hover:text-primary transition-colors" data-target="guide">使用指南</a>
+                <a href="#testimonials" class="mobile-nav-link py-2 hover:text-primary transition-colors" data-target="testimonials">家长见证</a>
+                <a href="#contact" class="mobile-nav-link py-2 hover:text-primary transition-colors" data-target="contact">联系我们</a>
+                <a href="#register" class="bg-primary text-light px-5 py-2 rounded-full text-center hover:bg-primary/90 transition-colors mt-2">
+                    免费注册
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区（Home）- 使用本地背景图片 -->
+    <section id="home" class="pt-32 pb-20 md:pt-40 md:pb-28 bg-gradient-to-b from-secondary to-light relative overflow-hidden">
+        <!-- 背景图片 -->
+        <div class="absolute inset-0 opacity-10 z-0">
+            <img src="C:\Users\money\Desktop\小挑\夏天简约自然风绿色树叶树枝清新自然背景（仅供交流学习非商用）.jpg" 
+                 alt="夏天简约自然风绿色树叶背景" 
+                 class="w-full h-full object-cover">
+        </div>
+        
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row items-center gap-10">
+                <!-- 文字内容 -->
+                <div class="md:w-1/2 space-y-6">
+                    <span class="inline-block bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-medium">
+                        江苏省大学生创新创业训练计划项目
+                    </span>
+                    <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-display font-bold leading-tight text-shadow">
+                        用AI声音疗愈<br>
+                        <span class="text-primary">重启“星星”对话</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-dark/80 leading-relaxed">
+                        星聆Stellin是国内首个基于人工智能技术的孤独症儿童声音疗愈平台。从自然、社会、自我三维度生成个性化声景，降低感官敏感，阶梯式培养社交能力，让每个孩子都能平等拥抱社会。
+                    </p>
+                    <p class="text-lg md:text-xl text-dark/80 leading-relaxed">
+                        项目起源于团队对特殊儿童教育现状的深入调研，发现传统干预方式存在资源分配不均、成本高昂等问题。我们联合特殊教育专家、人工智能工程师和心理学研究者，历经18个月研发，打造了这套融合声音疗愈与社交训练的创新解决方案。
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <a href="#register" class="bg-primary text-light px-8 py-3 rounded-full text-lg font-medium hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl">
+                            免费试用7天
+                        </a>
+                        <a href="#features" class="border-2 border-primary text-primary px-8 py-3 rounded-full text-lg font-medium hover:bg-primary/5 transition-colors">
+                            了解功能
+                        </a>
+                    </div>
+                    
+                    <!-- 信任背书 -->
+                    <div class="flex items-center gap-6 pt-6">
+                        <div class="flex -space-x-2">
+                            <img src="https://picsum.photos/id/1005/40/40" alt="合作机构" class="w-10 h-10 rounded-full border-2 border-light" loading="lazy">
+                            <img src="https://picsum.photos/id/1006/40/40" alt="合作机构" class="w-10 h-10 rounded-full border-2 border-light" loading="lazy">
+                            <img src="https://picsum.photos/id/1010/40/40" alt="合作机构" class="w-10 h-10 rounded-full border-2 border-light" loading="lazy">
+                        </div>
+                        <p class="text-sm text-dark/70">
+                            已与12家康复机构、3所高校达成合作
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 视觉图（带声景交互） -->
+                <div class="md:w-1/2 relative">
+                    <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
+                        <img src="C:\Users\money\Desktop\小挑\夏天简约自然风绿色树叶树枝清新自然背景（仅供交流学习非商用）.jpg" alt="AI声音疗愈场景" class="w-full h-auto" loading="lazy">
+                        <!-- 声景预览交互层 -->
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-dark/80 to-transparent p-6">
+                            <h3 class="text-light text-xl font-bold mb-2">声景预览：雨声疗愈</h3>
+                            <p class="text-light/80 text-sm mb-4">AI调节频率，适合感官敏感儿童放松情绪</p>
+                            <button id="playAudio" class="audio-btn bg-primary text-light w-12 h-12 rounded-full flex items-center justify-center hover:bg-primary/90 transition-colors">
+                                <i class="fa fa-play"></i>
+                            </button>
+                            <audio id="rainAudio" src="https://freesound.org/data/previews/346/346980_6103606-lq.mp3" preload="auto">
+                                您的浏览器不支持音频播放
+                            </audio>
+                        </div>
+                    </div>
+                    <!-- 装饰元素 -->
+                    <div class="absolute -top-6 -right-6 w-40 h-40 bg-accent/20 rounded-full blur-3xl"></div>
+                    <div class="absolute -bottom-8 -left-8 w-60 h-60 bg-primary/10 rounded-full blur-3xl"></div>
+                </div>
+            </div>
+            
+            <!-- 项目核心价值介绍 -->
+            <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-light p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa fa-heart text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">专业可信</h3>
+                    <p class="text-dark/70">由特殊教育专家团队指导研发，结合循证医学与神经科学研究成果，确保干预效果</p>
+                </div>
+                <div class="bg-light p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa fa-rocket text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">创新科技</h3>
+                    <p class="text-dark/70">运用人工智能、声景合成等前沿技术，打造个性化、自适应的干预方案</p>
+                </div>
+                <div class="bg-light p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa fa-balance-scale text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">公平普惠</h3>
+                    <p class="text-dark/70">打破地域限制，降低干预成本，让每个孤独症儿童都能获得专业帮助</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 新增：滚动图片区域（位于核心功能上方） -->
+    <section class="py-16 bg-light">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold text-center mb-12">
+                项目实践展示
+            </h2>
+            
+            <!-- 滚动图片容器 -->
+            <div class="scroll-container mb-8 rounded-2xl overflow-hidden shadow-lg">
+                <div class="scroll-images">
+                    <!-- 第一组图片 -->
+                    <div class="flex gap-4 min-w-full">
+                        <div class="w-1/2 rounded-xl overflow-hidden">
+                            <img src="C:\Users\money\Desktop\小挑\b4447c57eef79d39e9d13de4a2731ca6.jpg" alt="自然声景训练场景" class="w-full h-64 object-cover">
+                        </div>
+                    <div class="w-1/2 rounded-xl overflow-hidden">
+                            <img src="C:\Users\money\Desktop\小挑\8ed777833bb1f42312961cfe5f2efe94.jpg" alt="自然声景训练场景" class="w-full h-64 object-cover">
+                        </div>
+                         <div class="w-1/2 rounded-xl overflow-hidden">
+                            <img src="C:\Users\money\Desktop\小挑\c242ae0183bf7680d1019526846742cd.jpg" alt="自然声景训练场景" class="w-full h-64 object-cover">
+                        </div>
+                         <div class="w-1/2 rounded-xl overflow-hidden">
+                            <img src="C:\Users\money\Desktop\小挑\DSC06912.JPG" alt="自然声景训练场景" class="w-full h-64 object-cover">
+                        </div>
+                         </div>
+                      <div class="flex gap-4 min-w-full">  
+                        <div class="w-1/2 rounded-xl overflow-hidden">
+                            <img src="C:\Users\money\Desktop\小挑\b27e4e9191a247de515cce797f0ff691.jpg" alt="自然声景训练场景" class="w-full h-64 object-cover">
+                        </div>
+                        <div class="w-1/2 rounded-xl overflow-hidden">
+                            <img src="C:\Users\money\Desktop\小挑\DSC06907.JPG" alt="社交互动模拟训练" class="w-full h-64 object-cover">
+                        </div>
+                        <div class="w-1/2 rounded-xl overflow-hidden">
+                            <img src="C:\Users\money\Desktop\小挑\DSC06895.JPG" alt="社交互动模拟训练" class="w-full h-64 object-cover">
+                        </div>
+                          <div class="w-1/2 rounded-xl overflow-hidden">
+                            <img src="C:\Users\money\Desktop\小挑\DSC06931.JPG" alt="社交互动模拟训练" class="w-full h-64 object-cover">
+                        </div>
+                        </div>   
+                     </div>
+                </div>
+            </div>
+            
+            <!-- 图片解析文字 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
+                <div class="p-4 bg-secondary rounded-lg">
+                    <h3 class="font-bold text-lg mb-2">自然声景训练</h3>
+                    <p class="text-dark/70">通过AI生成的自然声音（雨声、鸟鸣等）帮助儿童逐步适应不同频率的声音刺激，降低感官敏感度</p>
+                </div>
+                <div class="p-4 bg-secondary rounded-lg">
+                    <h3 class="font-bold text-lg mb-2">社交互动模拟</h3>
+                    <p class="text-dark/70">虚拟场景中的社交互动训练，从简单问候到复杂对话，循序渐进提升社交能力</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心功能区（Features） -->
+    <section id="features" class="py-20 bg-light">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- 标题 -->
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-block bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-medium mb-4">
+                    核心优势
+                </span>
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-display font-bold mb-6">
+                    三大核心功能，破解孤独症干预痛点
+                </h2>
+                <p class="text-lg text-dark/70">
+                    从技术赋能到资源普惠，星聆Stellin构建“评估-干预-反馈”完整闭环，让专业干预触手可及
+                </p>
+            </div>
+            
+            <!-- 功能卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- 功能1：AI个性化声景 -->
+                <div class="bg-secondary rounded-2xl p-8 card-hover">
+                    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fa fa-headphones text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">AI动态声景生成</h3>
+                    <p class="text-dark/70 mb-6">
+                        基于儿童感官敏感度问卷，从自然（雨声、鸟鸣）、社会（超市、教室）、自我（呼吸声、轻音乐）三维度生成专属声景，实时匹配情绪状态调整参数。
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-2">
+                            <i class="fa fa-check text-primary mt-1"></i>
+                            <span class="text-dark/70">降低对特定声音的过度反应</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa fa-check text-primary mt-1"></i>
+                            <span class="text-dark/70">支持离线缓存，居家随时使用</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 功能2：阶梯式虚拟社交 -->
+                <div class="bg-secondary rounded-2xl p-8 card-hover">
+                    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fa fa-comments text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">阶梯式虚拟社交训练</h3>
+                    <p class="text-dark/70 mb-6">
+                        设置“自然适应-模拟互动-反馈强化”三级路径，通过3D场景（如超市购物、课堂发言）引导儿童练习社交规则，AI对话伙伴提供低压力互动环境。
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-2">
+                            <i class="fa fa-check text-primary mt-1"></i>
+                            <span class="text-dark/70">场景难度随能力自动调整</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa fa-check text-primary mt-1"></i>
+                            <span class="text-dark/70">生成社交能力成长报告</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 功能3：星聆云课堂 -->
+                <div class="bg-secondary rounded-2xl p-8 card-hover">
+                    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fa fa-cloud text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">星聆云课堂</h3>
+                    <p class="text-dark/70 mb-6">
+                        整合医疗机构、高校、公益组织的标准化课程，开发“声音众创”模块（公众可上传方言故事、自然录音），降低家庭干预成本，实现资源普惠。
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-2">
+                            <i class="fa fa-check text-primary mt-1"></i>
+                            <span class="text-dark/70">家长指导课免费开放</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa fa-check text-primary mt-1"></i>
+                            <span class="text-dark/70">区块链保护声景版权</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目影响区（Impact） -->
+    <section id="impact" class="py-20 bg-secondary">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <!-- 数据看板 -->
+                <div class="md:w-1/2 bg-light rounded-2xl p-8 shadow-lg">
+                    <h3 class="text-xl font-bold mb-6">项目进展与影响</h3>
+                    <div class="grid grid-cols-2 gap-6 mb-8">
+                        <!-- 数据卡片1 -->
+                        <div class="text-center p-4 bg-secondary/50 rounded-lg">
+                            <div class="text-4xl font-bold text-primary mb-2" id="userCount">0</div>
+                            <p class="text-dark/70">服务孤独症家庭</p>
+                        </div>
+                        <!-- 数据卡片2 -->
+                        <div class="text-center p-4 bg-secondary/50 rounded-lg">
+                            <div class="text-4xl font-bold text-primary mb-2" id="coopCount">0</div>
+                            <p class="text-dark/70">合作康复机构</p>
+                        </div>
+                        <!-- 数据卡片3 -->
+                        <div class="text-center p-4 bg-secondary/50 rounded-lg">
+                            <div class="text-4xl font-bold text-primary mb-2" id="soundCount">0</div>
+                            <p class="text-dark/70">声景资源数量</p>
+                        </div>
+                        <!-- 数据卡片4 -->
+                        <div class="text-center p-4 bg-secondary/50 rounded-lg">
+                            <div class="text-4xl font-bold text-primary mb-2" id="courseCount">0</div>
+                            <p class="text-dark/70">标准化课程</p>
+                        </div>
+                    </div>
+                    <!-- 干预效果图表 -->
+                    <div>
+                        <h4 class="text-lg font-medium mb-4">儿童社交能力提升趋势（试点数据）</h4>
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <canvas id="progressChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 项目价值说明 -->
+                <div class="md:w-1/2 space-y-6">
+                    <span class="inline-block bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-medium">
+                        社会价值
+                    </span>
+                    <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-display font-bold">
+                        用科技推动特殊教育公平
+                    </h2>
+                    <p class="text-lg text-dark/80 leading-relaxed">
+                        传统孤独症干预存在“城乡资源失衡、家庭成本高、专业人才少”三大痛点，星聆Stellin通过数字化技术打破地域壁垒，让三四线城市、中低收入家庭也能获得专业干预资源。
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-balance-scale text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">教育公平</h4>
+                                <p class="text-dark/70">免费开放基础功能，公益端口对接贫困家庭，缩小干预资源差距</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-flask text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">科学验证</h4>
+                                <p class="text-dark/70">联合高校开展临床验证，发表2篇省级期刊论文，确保干预效果</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-users text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">生态共建</h4>
+                                <p class="text-dark/70">联动医疗、教育、公益机构，形成“资源共创-服务共享”可持续生态</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技术创新区（Technology） -->
+    <section id="technology" class="py-20 bg-light">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- 标题 -->
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-block bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-medium mb-4">
+                    技术实力
+                </span>
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-display font-bold mb-6">
+                    创新技术支撑，专业干预效果
+                </h2>
+                <p class="text-lg text-dark/70">
+                    星聆Stellin融合多项前沿技术，打造科学、高效、个性化的孤独症干预解决方案
+                </p>
+            </div>
+            
+            <!-- 技术创新点 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- 技术1：AI声景合成引擎 -->
+                <div class="flex gap-6 items-start">
+                    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-sliders text-primary text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-3">自适应声景合成引擎</h3>
+                        <p class="text-dark/70 mb-4">
+                            基于10万+临床声疗数据训练的深度学习模型，可根据儿童实时生理指标（心率、皮肤电反应）和行为表现，动态调整声景参数（频率、振幅、节奏），实现精准干预。
+                        </p>
+                        <p class="text-dark/70">
+                            采用频谱分析与声波重组技术，将自然声音分解为基础声波单元，再根据儿童敏感度特征重新组合，创造既安全又有效的个性化声景。
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 技术2：情绪识别系统 -->
+                <div class="flex gap-6 items-start">
+                    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-smile-o text-primary text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-3">多模态情绪识别系统</h3>
+                        <p class="text-dark/70 mb-4">
+                            整合面部表情识别、语音情绪分析和行为模式识别技术，实时判断儿童情绪状态（平静、紧张、焦虑、愉悦），准确率达89.7%，为干预方案调整提供数据支持。
+                        </p>
+                        <p class="text-dark/70">
+                            系统采用轻量化模型设计，可在普通移动设备上高效运行，延迟低于300ms，确保干预的及时性。
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 技术3：个性化学习算法 -->
+                <div class="flex gap-6 items-start">
+                    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-graduation-cap text-primary text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-3">智能学习路径规划</h3>
+                        <p class="text-dark/70 mb-4">
+                            基于强化学习算法的个性化训练系统，可根据儿童在社交训练中的表现自动调整任务难度和训练重点，实现"最近发展区"精准教学，训练效率提升40%。
+                        </p>
+                        <p class="text-dark/70">
+                            系统内置12种常见社交场景模型，包含500+社交互动脚本，覆盖从基础沟通到复杂社交的全场景训练需求。
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 技术4：安全与隐私保护 -->
+                <div class="flex gap-6 items-start">
+                    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-lock text-primary text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-3">安全与隐私保护技术</h3>
+                        <p class="text-dark/70 mb-4">
+                            采用联邦学习框架，所有训练数据在本地处理，不上传原始数据，保护儿童隐私。通过区块链技术记录干预过程与效果，确保数据不可篡改，为医疗评估提供可信依据。
+                        </p>
+                        <p class="text-dark/70">
+                            系统通过国家三级等保认证，采用端到端加密传输，全方位保障数据安全与隐私。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 使用指南区（Guide） -->
+    <section id="guide" class="py-20 bg-secondary">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- 标题 -->
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-block bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-medium mb-4">
+                    操作指南
+                </span>
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-display font-bold mb-6">
+                    简单四步，开启专业干预之旅
+                </h2>
+                <p class="text-lg text-dark/70">
+                    星聆Stellin平台设计简洁易用，家长只需简单几步，即可为孩子开启个性化干预训练
+                </p>
+            </div>
+            
+            <!-- 使用步骤 -->
+            <div class="max-w-5xl mx-auto">
+                <div class="relative">
+                    <!-- 连接线 -->
+                    <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-primary/20 transform -translate-x-1/2"></div>
+                    
+                    <!-- 步骤1 -->
+                    <div class="flex flex-col md:flex-row items-center mb-16 relative">
+                        <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2">注册账号与儿童评估</h3>
+                            <p class="text-dark/70">
+                                完成注册后，填写儿童基本信息并完成感官敏感度评估问卷（约10分钟），系统将生成初步评估报告，为个性化干预提供依据。
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 rounded-full border-4 border-primary/20 flex items-center justify-center font-bold text-xl z-10 order-1 md:order-2 step-active shadow-md">1</div>
+                        <div class="md:w-1/2 md:pl-12 order-3 hidden md:block"></div>
+                    </div>
+                    
+                    <!-- 步骤2 -->
+                    <div class="flex flex-col md:flex-row items-center mb-16 relative">
+                        <div class="md:w-1/2 md:pr-12 order-2 md:order-1 hidden md:block"></div>
+                        <div class="w-12 h-12 rounded-full border-4 border-primary/20 flex items-center justify-center font-bold text-xl z-10 order-1 md:order-2 step-active shadow-md">2</div>
+                        <div class="md:w-1/2 md:pl-12 order-3 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2">制定个性化干预方案</h3>
+                            <p class="text-dark/70">
+                                基于评估结果，系统自动生成包含声景疗愈和社交训练的个性化干预方案，家长可根据实际情况调整训练时长和频率。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤3 -->
+                    <div class="flex flex-col md:flex-row items-center mb-16 relative">
+                        <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2">开展日常训练</h3>
+                            <p class="text-dark/70">
+                                按照方案进行每日训练，每次15-30分钟。系统会记录训练数据，包括儿童反应和完成情况，家长可随时查看实时反馈。
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 rounded-full border-4 border-primary/20 flex items-center justify-center font-bold text-xl z-10 order-1 md:order-2 step-active shadow-md">3</div>
+                        <div class="md:w-1/2 md:pl-12 order-3 hidden md:block"></div>
+                    </div>
+                    
+                    <!-- 步骤4 -->
+                    <div class="flex flex-col md:flex-row items-center relative">
+                        <div class="md:w-1/2 md:pr-12 order-2 md:order-1 hidden md:block"></div>
+                        <div class="w-12 h-12 rounded-full border-4 border-primary/20 flex items-center justify-center font-bold text-xl z-10 order-1 md:order-2 step-active shadow-md">4</div>
+                        <div class="md:w-1/2 md:pl-12 order-3 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2">定期评估与方案优化</h3>
+                            <p class="text-dark/70">
+                                每2周进行一次阶段性评估，系统根据训练数据和评估结果自动优化干预方案，确保训练效果持续提升。同时生成详细的成长报告，便于跟踪进步。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 家长见证区（Testimonials） -->
+    <section id="testimonials" class="py-20 bg-light">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- 标题 -->
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-block bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-medium mb-4">
+                    用户反馈
+                </span>
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-display font-bold mb-6">
+                    来自“星星”家庭的真实声音
+                </h2>
+                <p class="text-lg text-dark/70">
+                    星聆Stellin已帮助多个家庭改善孩子的感官敏感与社交能力，以下是部分家长的真实反馈
+                </p>
+            </div>
+            
+            <!-- 轮播 Testimonial -->
+            <div class="max-w-4xl mx-auto relative">
+                <div id="testimonialSlider" class="overflow-hidden rounded-2xl">
+                    <div class="flex transition-transform duration-500 ease-in-out" id="sliderTrack">
+                        <!-- Testimonial 1 -->
+                        <div class="min-w-full p-4">
+                            <div class="bg-secondary rounded-2xl p-8 relative h-full">
+                                <div class="absolute -top-5 left-8 text-5xl text-primary/20">
+                                    <i class="fa fa-quote-left"></i>
+                                </div>
+                                <p class="text-lg text-dark/80 leading-relaxed mb-8 pl-4">
+                                    孩子之前对洗衣机、吹风机的声音特别敏感，一听到就哭闹。用星聆的“社会声景适应”功能1个月后，现在能平静待在有这些声音的环境里，甚至会主动说“妈妈，洗衣机在唱歌”。
+                                </p>
+                                <div class="flex items-center gap-4">
+                                    <img src="https://picsum.photos/id/1027/60/60" alt="家长头像" class="w-14 h-14 rounded-full border-2 border-primary/20" loading="lazy">
+                                    <div>
+                                        <h4 class="font-bold">李妈妈</h4>
+                                        <p class="text-dark/60 text-sm">孩子4岁，使用平台2个月</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Testimonial 2 -->
+                        <div class="min-w-full p-4">
+                            <div class="bg-secondary rounded-2xl p-8 relative h-full">
+                                <div class="absolute -top-5 left-8 text-5xl text-primary/20">
+                                    <i class="fa fa-quote-left"></i>
+                                </div>
+                                <p class="text-lg text-dark/80 leading-relaxed mb-8 pl-4">
+                                    作为三四线城市的家长，之前每月要花3000多带孩子去省会做干预。星聆的“虚拟社交”功能让孩子在家就能练习打招呼、回应问题，现在去幼儿园已经能和小朋友简单互动了，省了不少钱和精力。
+                                </p>
+                                <div class="flex items-center gap-4">
+                                    <img src="https://picsum.photos/id/1074/60/60" alt="家长头像" class="w-14 h-14 rounded-full border-2 border-primary/20" loading="lazy">
+                                    <div>
+                                        <h4 class="font-bold">张爸爸</h4>
+                                        <p class="text-dark/60 text-sm">孩子5岁，使用平台3个月</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Testimonial 3 -->
+                        <div class="min-w-full p-4">
+                            <div class="bg-secondary rounded-2xl p-8 relative h-full">
+                                <div class="absolute -top-5 left-8 text-5xl text-primary/20">
+                                    <i class="fa fa-quote-left"></i>
+                                </div>
+                                <p class="text-lg text-dark/80 leading-relaxed mb-8 pl-4">
+                                    我们机构引入星聆平台后，标准化课程让新老师也能快速上手，情绪识别功能还能自动生成孩子的干预报告，工作效率提升了不少。有家长反馈，孩子在家用平台复习，干预效果更持久了。
+                                </p>
+                                <div class="flex items-center gap-4">
+                                    <img src="https://picsum.photos/id/1066/60/60" alt="机构老师头像" class="w-14 h-14 rounded-full border-2 border-primary/20" loading="lazy">
+                                    <div>
+                                        <h4 class="font-bold">王老师</h4>
+                                        <p class="text-dark/60 text-sm">某康复机构特教老师</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 轮播控制按钮 -->
+                <button id="prevBtn" class="absolute top-1/2 -left-4 -translate-y-1/2 w-10 h-10 bg-light rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-primary hover:text-light transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <button id="nextBtn" class="absolute top-1/2 -right-4 -translate-y-1/2 w-10 h-10 bg-light rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-primary hover:text-light transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+                
+                <!-- 轮播指示器 -->
+                <div class="flex justify-center gap-2 mt-8">
+                    <button class="w-3 h-3 rounded-full bg-primary transition-all duration-300 indicator-btn" data-index="0"></button>
+                    <button class="w-3 h-3 rounded-full bg-primary/30 transition-all duration-300 indicator-btn" data-index="1"></button>
+                    <button class="w-3 h-3 rounded-full bg-primary/30 transition-all duration-300 indicator-btn" data-index="2"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 注册区（Register） -->
+    <section id="register" class="py-20 bg-gradient-to-r from-primary to-dark text-light">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto bg-light/10 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-xl">
+                <div class="text-center mb-10">
+                    <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-display font-bold mb-4">
+                        免费试用7天，开启孩子的康复之旅
+                    </h2>
+                    <p class="text-light/80 text-lg">
+                        填写信息，获取平台账号，解锁AI声景生成、基础社交训练等核心功能
+                    </p>
+                </div>
+                
+                <!-- 注册表单 -->
+                <form id="registerForm" class="max-w-2xl mx-auto space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="parentName" class="block text-light/90 mb-2">家长姓名</label>
+                            <input type="text" id="parentName" class="w-full px-4 py-3 rounded-lg bg-light/20 border border-light/30 text-light placeholder-light/50 focus:outline-none focus:ring-2 focus:ring-light transition-all" placeholder="请输入您的姓名" required>
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-light/90 mb-2">联系电话</label>
+                            <input type="tel" id="phone" class="w-full px-4 py-3 rounded-lg bg-light/20 border border-light/30 text-light placeholder-light/50 focus:outline-none focus:ring-2 focus:ring-light transition-all" placeholder="请输入您的手机号" required>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="childAge" class="block text-light/90 mb-2">孩子年龄</label>
+                            <select id="childAge" class="w-full px-4 py-3 rounded-lg bg-light/20 border border-light/30 text-light placeholder-light/50 focus:outline-none focus:ring-2 focus:ring-light transition-all" required>
+                                <option value="">请选择孩子年龄</option>
+                                <option value="2-4">2-4岁</option>
+                                <option value="5-7">5-7岁</option>
+                                <option value="8-12">8-12岁</option>
+                                <option value="12+">12岁以上</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="city" class="block text-light/90 mb-2">所在城市</label>
+                            <input type="text" id="city" class="w-full px-4 py-3 rounded-lg bg-light/20 border border-light/30 text-light placeholder-light/50 focus:outline-none focus:ring-2 focus:ring-light transition-all" placeholder="请输入您所在的城市" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="needs" class="block text-light/90 mb-2">孩子主要需求（可多选）</label>
+                        <div class="flex flex-wrap gap-4">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" class="w-4 h-4 rounded bg-light/20 border border-light/30 text-primary focus:ring-primary">
+                                <span>感官敏感调节</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" class="w-4 h-4 rounded bg-light/20 border border-light/30 text-primary focus:ring-primary">
+                                <span>语言沟通能力</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" class="w-4 h-4 rounded bg-light/20 border border-light/30 text-primary focus:ring-primary">
+                                <span>社交互动训练</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" class="w-4 h-4 rounded bg-light/20 border border-light/30 text-primary focus:ring-primary">
+                                <span>情绪管理</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-light text-primary font-bold text-lg py-4 rounded-lg hover:bg-light/90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-transform">
+                        提交申请，免费试用
+                    </button>
+                    <p class="text-center text-light/60 text-sm mt-4">
+                        提交即视为同意《用户服务协议》和《隐私政策》，我们将在24小时内与您联系
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系区（Contact） -->
+    <section id="contact" class="py-20 bg-light">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row gap-12">
+                <!-- 联系信息 -->
+                <div class="md:w-1/2 space-y-8">
+                    <span class="inline-block bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-medium">
+                        联系我们
+                    </span>
+                    <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-display font-bold">
+                        携手共建“星星”的未来
+                    </h2>
+                    <p class="text-lg text-dark/70 leading-relaxed">
+                        如果您是孤独症儿童家庭、康复机构或公益组织，欢迎联系我们，共同推动特殊教育创新与公平。
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-phone text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">项目负责人</h4>
+                                <p class="text-dark/70">夏晴：19852824991</p>
+                                <p class="text-dark/70">王琦老师：18552850368</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-envelope text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">电子邮箱</h4>
+                                <p class="text-dark/70">xinglingstellin@163.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-map-marker text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">项目地址</h4>
+                                <p class="text-dark/70">江苏师范大学科文学院管理学院创新创业中心</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-weixin text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">公众号</h4>
+                                <p class="text-dark/70">星聆Stellin（扫码关注获取更多资讯）</p>
+                                <div class="mt-2 w-32 h-32 bg-dark/10 flex items-center justify-center rounded-lg border border-primary/20">
+                                    <span class="text-dark/50 text-sm">公众号二维码</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 留言表单 -->
+                <div class="md:w-1/2 bg-secondary rounded-2xl p-8 shadow-lg">
+                    <h3 class="text-xl font-bold mb-6">留言咨询</h3>
+                    <form id="contactForm" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block text-dark/90 mb-2">您的姓名</label>
+                                <input type="text" id="name" class="w-full px-4 py-3 rounded-lg bg-light border border-dark/10 text-dark placeholder-dark/50 focus:outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="请输入您的姓名" required>
+                            </div>
+                            <div>
+                                <label for="contactPhone" class="block text-dark/90 mb-2">联系电话</label>
+                                <input type="tel" id="contactPhone" class="w-full px-4 py-3 rounded-lg bg-light border border-dark/10 text-dark placeholder-dark/50 focus:outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="请输入您的手机号" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="organization" class="block text-dark/90 mb-2">所属机构/身份</label>
+                            <input type="text" id="organization" class="w-full px-4 py-3 rounded-lg bg-light border border-dark/10 text-dark placeholder-dark/50 focus:outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="如：XX康复机构/孤独症儿童家长" required>
+                        </div>
+                        <div>
+                            <label for="message" class="block text-dark/90 mb-2">您的问题/需求</label>
+                            <textarea id="message" rows="5" class="w-full px-4 py-3 rounded-lg bg-light border border-dark/10 text-dark placeholder-dark/50 focus:outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="请简要描述您的问题或合作需求" required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-primary text-light font-bold text-lg py-4 rounded-lg hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-transform">
+                            提交留言
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-light py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <!-- 品牌信息 -->
+                <div class="md:col-span-1">
+                    <a href="#home" class="flex items-center gap-2 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                            <i class="fa fa-music text-light text-xl"></i>
+                        </div>
+                        <span class="text-xl font-display font-bold text-light">星聆Stellin</span>
+                    </a>
+                    <p class="text-light/60 mb-6">
+                        用AI声音疗愈，助力孤独症儿童社会融入
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <i class="fa fa-weixin"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <i class="fa fa-qq"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">快速链接</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-light/60 hover:text-light transition-colors">首页</a></li>
+                        <li><a href="#features" class="text-light/60 hover:text-light transition-colors">核心功能</a></li>
+                        <li><a href="#impact" class="text-light/60 hover:text-light transition-colors">项目影响</a></li>
+                        <li><a href="#technology" class="text-light/60 hover:text-light transition-colors">技术创新</a></li>
+                        <li><a href="#guide" class="text-light/60 hover:text-light transition-colors">使用指南</a></li>
+                        <li><a href="#testimonials" class="text-light/60 hover:text-light transition-colors">家长见证</a></li>
+                        <li><a href="#register" class="text-light/60 hover:text-light transition-colors">免费试用</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 合作与支持 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">合作与支持</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors">机构合作</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors">公益合作</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors">加入我们</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors">用户手册</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors">常见问题</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 法律信息 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">法律信息</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors">用户服务协议</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors">隐私政策</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors">知识产权声明</a></li>
+                        <li><a href="#" class="text-light/60 hover:text-light transition-colors">免责声明</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 版权信息 -->
+            <div class="border-t border-light/10 pt-8 text-center text-light/60 text-sm">
+                <p>© 2025 星聆Stellin项目组. 保留所有权利. 江苏师范大学科文学院管理学院支持</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript代码 -->
+    <script>
+        // 等待 DOM 完全加载
+        document.addEventListener('DOMContentLoaded', function () {
+            // 获取 DOM 元素
+            const navbar = document.getElementById('navbar');
+            const menuBtn = document.getElementById('menuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = menuBtn.querySelector('i');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            const sections = document.querySelectorAll('section');
+            const playAudioBtn = document.getElementById('playAudio');
+            const audioElement = document.getElementById('rainAudio');
+            const audioIcon = playAudioBtn.querySelector('i');
+            const testimonialSection = document.getElementById('testimonials');
+            const leftSidebar = document.querySelector('.testimonial-sidebar:first-of-type');
+            const rightSidebar = document.querySelector('.testimonial-sidebar:last-of-type');
+            const sliderTrack = document.getElementById('sliderTrack');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const indicatorBtns = document.querySelectorAll('.indicator-btn');
+            const userCountEl = document.getElementById('userCount');
+            const coopCountEl = document.getElementById('coopCount');
+            const soundCountEl = document.getElementById('soundCount');
+            const courseCountEl = document.getElementById('courseCount');
+            const impactSection = document.getElementById('impact');
+            let countAnimated = false;
+            let progressChart = null;
+            let chartRendered = false;
+            const registerForm = document.getElementById('registerForm');
+            const contactForm = document.getElementById('contactForm');
+            
+            // 创建提交成功提示
+            const submitToast = document.createElement('div');
+            submitToast.id = 'submitToast';
+            submitToast.className = 'fixed bottom-5 right-5 bg-primary text-light px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50';
+            submitToast.textContent = '提交成功！我们将尽快与您联系。';
+            document.body.appendChild(submitToast);
+
+            // 1. 导航栏样式切换（滚动时）
+            function updateNavbarStyle() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-light', 'shadow-md');
+                    navbar.classList.remove('bg-transparent');
+                } else {
+                    navbar.classList.remove('bg-light', 'shadow-md');
+                    navbar.classList.add('bg-transparent');
+                }
+
+                // 控制家长见证区侧边组件显示/隐藏
+                const testimonialTop = testimonialSection.offsetTop - 200;
+                const testimonialBottom = testimonialTop + testimonialSection.offsetHeight;
+                if (window.scrollY >= testimonialTop && window.scrollY <= testimonialBottom) {
+                    leftSidebar.classList.add('active');
+                    rightSidebar.classList.add('active');
+                } else {
+                    leftSidebar.classList.remove('active');
+                    rightSidebar.classList.remove('active');
+                }
+            }
+
+            // 导航链接高亮
+            function highlightNavLink() {
+                let currentSection = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    const sectionHeight = section.offsetHeight;
+                    if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+
+                // 桌面端导航高亮
+                navLinks.forEach(link => {
+                    link.classList.remove('nav-link-active');
+                    if (link.getAttribute('data-target') === currentSection) {
+                        link.classList.add('nav-link-active');
+                    }
+                });
+
+                // 移动端导航高亮
+                mobileNavLinks.forEach(link => {
+                    link.classList.remove('text-primary', 'font-medium');
+                    if (link.getAttribute('data-target') === currentSection) {
+                        link.classList.add('text-primary', 'font-medium');
+                    }
+                });
+            }
+
+            // 2. 移动端菜单切换
+            menuBtn.addEventListener('click', function () {
+                mobileMenu.classList.toggle('hidden');
+                if (mobileMenu.classList.contains('hidden')) {
+                    menuIcon.classList.remove('fa-times');
+                    menuIcon.classList.add('fa-bars');
+                } else {
+                    menuIcon.classList.remove('fa-bars');
+                    menuIcon.classList.add('fa-times');
+                }
+            });
+
+            // 移动端导航点击后关闭菜单
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.classList.remove('fa-times');
+                    menuIcon.classList.add('fa-bars');
+                });
+            });
+
+            // 3. 平滑滚动（导航链接点击跳转）
+            const allNavLinks = [...navLinks, ...mobileNavLinks];
+            allNavLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // 4. 音频控制
+            playAudioBtn.addEventListener('click', function () {
+                if (audioElement.paused) {
+                    audioElement.play();
+                    audioIcon.classList.remove('fa-play');
+                    audioIcon.classList.add('fa-pause');
+                } else {
+                    audioElement.pause();
+                    audioIcon.classList.remove('fa-pause');
+                    audioIcon.classList.add('fa-play');
+                }
+            });
+
+            // 5. 轮播图功能
+            let currentSlide = 0;
+            const slideCount = sliderTrack.children.length;
+
+            function goToSlide(index) {
+                if (index < 0) index = slideCount - 1;
+                if (index >= slideCount) index = 0;
+                currentSlide = index;
+                const slideWidth = sliderTrack.children[0].offsetWidth;
+                sliderTrack.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+                indicatorBtns.forEach((btn, idx) => {
+                    if (idx === currentSlide) {
+                        btn.classList.remove('bg-primary/30');
+                        btn.classList.add('bg-primary');
+                    } else {
+                        btn.classList.remove('bg-primary');
+                        btn.classList.add('bg-primary/30');
+                    }
+                });
+            }
+
+            prevBtn.addEventListener('click', function () {
+                goToSlide(currentSlide - 1);
+            });
+
+            nextBtn.addEventListener('click', function () {
+                goToSlide(currentSlide + 1);
+            });
+
+            indicatorBtns.forEach((btn, idx) => {
+                btn.addEventListener('click', function () {
+                    goToSlide(idx);
+                });
+            });
+
+            window.addEventListener('resize', function () {
+                goToSlide(currentSlide);
+            });
+
+            // 6. 数字动画（项目数据计数）
+            function animateCount(element, target, duration = 2000) {
+                let start = 0;
+                const increment = target / (duration / 16);
+                const timer = setInterval(function () {
+                    start += increment;
+                    if (start >= target) {
+                        clearInterval(timer);
+                        element.textContent = target.toLocaleString();
+                    } else {
+                        element.textContent = Math.floor(start).toLocaleString();
+                    }
+                }, 16);
+            }
+
+            function checkCountAnimation() {
+                if (!countAnimated) {
+                    const impactTop = impactSection.offsetTop - 300;
+                    if (window.scrollY >= impactTop) {
+                        animateCount(userCountEl, 528);
+                        animateCount(coopCountEl, 12);
+                        animateCount(soundCountEl, 186);
+                        animateCount(courseCountEl, 32);
+                        countAnimated = true;
+                    }
+                }
+            }
+
+            // 7. 图表渲染（儿童社交能力提升趋势）
+            function renderChart() {
+                if (!chartRendered) {
+                    const ctx = document.getElementById('progressChart').getContext('2d');
+                    progressChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['第1周', '第2周', '第3周', '第4周', '第5周', '第6周', '第7周', '第8周'],
+                            datasets: [
+                                {
+                                    label: '语言回应率',
+                                    data: [32, 38, 45, 52, 58, 65, 72, 78],
+                                    borderColor: '#3E7C17',
+                                    backgroundColor: 'rgba(62, 124, 23, 0.1)',
+                                    tension: 0.4,
+                                    fill: true
+                                },
+                                {
+                                    label: '社交互动时长(分钟)',
+                                    data: [5, 7, 9, 12, 15, 18, 22, 25],
+                                    borderColor: '#8FBF7B',
+                                    backgroundColor: 'rgba(143, 191, 123, 0.1)',
+                                    tension: 0.4,
+                                    fill: true
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                    labels: {
+                                        boxWidth: 12,
+                                        font: {
+                                            size: 12
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    grid: {
+                                        color: 'rgba(0, 0, 0, 0.05)'
+                                    }
+                                },
+                                x: {
+                                    grid: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    chartRendered = true;
+                }
+            }
+
+            function checkChartRender() {
+                const impactTop = impactSection.offsetTop - 300;
+                if (window.scrollY >= impactTop && !chartRendered) {
+                    renderChart();
+                }
+            }
+
+            // 8. 表单提交处理
+            function handleFormSubmit(form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const requiredInputs = form.querySelectorAll('[required]');
+                    let isValid = true;
+                    requiredInputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            isValid = false;
+                            input.classList.add('border-red-500');
+                            input.addEventListener('focus', function () {
+                                input.classList.remove('border-red-500');
+                            }, { once: true });
+                        }
+                    });
+
+                    if (isValid) {
+                        const submitBtn = form.querySelector('button[type="submit"]');
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 提交中...';
+
+                        setTimeout(function () {
+                            form.reset();
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
+                            submitToast.classList.remove('translate-y-20', 'opacity-0');
+                            setTimeout(function () {
+                                submitToast.classList.add('translate-y-20', 'opacity-0');
+                            }, 3000);
+                        }, 2000);
+                    }
+                });
+            }
+
+            if (registerForm) handleFormSubmit(registerForm);
+            if (contactForm) handleFormSubmit(contactForm);
+
+            // 9. 页面滚动监听
+            window.addEventListener('scroll', function () {
+                updateNavbarStyle();
+                highlightNavLink();
+                checkCountAnimation();
+                checkChartRender();
+            });
+
+            // 10. 页面加载完成后初始化
+            window.addEventListener('load', function () {
+                updateNavbarStyle();
+                highlightNavLink();
+                checkCountAnimation();
+                checkChartRender();
+            });
+        });
+    </script>
+</body>
+</html>
