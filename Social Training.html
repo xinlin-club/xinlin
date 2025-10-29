@@ -19,13 +19,13 @@
                         accent: '#8FBF7B',     // 强调色：淡青绿
                         dark: '#2D4A22',       // 深色：深绿（文字/边框）
                         light: '#FFFFFF',      // 白色：背景/卡片
-                        yellow: '#FBBF24',     // 新增：黄色（装饰元素）
-                        blue: '#3B82F6',       // 新增：蓝色（点缀元素）
+                        yellow: '#FBBF24',     // 黄色（装饰元素）
+                        blue: '#3B82F6',       // 蓝色（点缀元素）
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
                         display: ['"Comic Sans MS"', '"Marker Felt"', 'cursive'], // 儿童友好字体
-                        comic: ['"Comic Sans MS"', '"Marker Felt"', 'cursive'], // 新增：卡通字体
+                        comic: ['"Comic Sans MS"', '"Marker Felt"', 'cursive'], // 卡通字体
                     },
                     boxShadow: {
                         'soft': '0 4px 20px rgba(62, 124, 23, 0.08)',
@@ -37,7 +37,7 @@
         }
     </script>
     
-<!-- 自定义样式 - 新增趣味动画与装饰 -->
+    <!-- 自定义样式 - 增强互动体验 -->
     <style type="text/tailwindcss">
         @layer utilities {
             .text-shadow {
@@ -81,7 +81,6 @@
                 0% { transform: translateX(0); }
                 100% { transform: translateX(-50%); }
             }
-            /* 侧边组件动画 */
             .side-widget {
                 transition: all 0.4s ease;
             }
@@ -95,7 +94,6 @@
             .decor-photo:hover {
                 transform: scale(1.05) rotate(2deg);
             }
-            /* 初始隐藏侧边组件，仅在目标区域显示 */
             .testimonial-sidebar {
                 opacity: 0;
                 visibility: hidden;
@@ -105,8 +103,6 @@
                 opacity: 1;
                 visibility: visible;
             }
-
-            /* 新增：儿童友好动画 */
             .float {
                 animation: float 3s ease-in-out infinite;
             }
@@ -182,6 +178,46 @@
             .step-item:hover {
                 transform: translateY(-10px) rotate(1deg);
             }
+            
+            /* 增强互动体验的样式 */
+            .btn-hover-effect {
+                transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .btn-hover-effect:active {
+                transform: scale(0.95);
+            }
+            .scene-transition {
+                transition: all 0.4s ease-out;
+            }
+            .feedback-appear {
+                animation: fadeInUp 0.4s ease-out forwards;
+            }
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .progress-line {
+                transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .response-highlight {
+                animation: pulseHighlight 0.5s ease-in-out;
+            }
+            @keyframes pulseHighlight {
+                0%, 100% { box-shadow: 0 0 0 0 rgba(62, 124, 23, 0.4); }
+                50% { box-shadow: 0 0 0 8px rgba(62, 124, 23, 0); }
+            }
+            .option-hover {
+                transition: all 0.2s ease;
+            }
+            .option-hover:hover {
+                transform: translateX(4px);
+            }
         }
     </style>
 </head>
@@ -191,46 +227,46 @@
     <header id="navbar" class="fixed w-full top-0 z-50 transition-all 0.3s ease bg-transparent">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
-                <!-- 品牌Logo - 增加浮动动画 -->
-                <a href="#home" class="flex items-center gap-2">
+                <!-- 品牌Logo -->
+                <a href="index.html" class="flex items-center gap-2">
                     <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center float border-2 border-accent/30">
                         <i class="fa fa-music text-light text-xl"></i>
                     </div>
                     <span class="text-[clamp(1.2rem,3vw,1.5rem)] font-comic font-bold text-primary">星聆Stellin 🎵</span>
                 </a>
                 
-                <!-- 桌面端导航 - 增加图标与卡通字体 -->
+                <!-- 桌面端导航 -->
                 <nav class="hidden md:flex items-center gap-6">
-                    <a href="#home" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="home">首页 🏠</a>
-                    <a href="#features" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="features">核心功能 ⭐</a>
-                    <a href="#impact" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="impact">项目影响 🌱</a>
-                    <a href="#technology" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="technology">技术创新 🚀</a>
-                    <a href="#guide" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="guide">使用指南 📝</a>
-                    <a href="#testimonials" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="testimonials">家长见证 💬</a>
-                    <a href="#contact" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="contact">联系我们 📞</a>
-                    <a href="#register" class="bg-primary text-light px-5 py-2 rounded-full hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg font-comic text-lg">
+                    <a href="index.html" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="home">首页 🏠</a>
+                    <a href="index.html#features" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="features">核心功能 ⭐</a>
+                    <a href="index.html#impact" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="impact">项目影响 🌱</a>
+                    <a href="index.html#technology" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="technology">技术创新 🚀</a>
+                    <a href="index.html#guide" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="guide">使用指南 📝</a>
+                    <a href="index.html#testimonials" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="testimonials">家长见证 💬</a>
+                    <a href="index.html#contact" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="contact">联系我们 📞</a>
+                    <a href="index.html#register" class="bg-primary text-light px-5 py-2 rounded-full hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg font-comic text-lg btn-hover-effect">
                         免费注册 🎁
                     </a>
                 </nav>
                 
-                <!-- 移动端菜单按钮 - 优化样式 -->
-                <button id="menuBtn" class="md:hidden text-primary text-2xl focus:outline-none">
+                <!-- 移动端菜单按钮 -->
+                <button id="menuBtn" class="md:hidden text-primary text-2xl focus:outline-none btn-hover-effect">
                     <i class="fa fa-bars"></i>
                 </button>
             </div>
         </div>
         
-        <!-- 移动端导航菜单（默认隐藏）- 增加卡通字体 -->
+        <!-- 移动端导航菜单 -->
         <div id="mobileMenu" class="hidden md:hidden bg-light shadow-lg absolute w-full border-t border-primary/20">
             <div class="container mx-auto px-4 py-3 flex flex-col gap-3">
-                <a href="#home" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="home">首页 🏠</a>
-                <a href="#features" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="features">核心功能 ⭐</a>
-                <a href="#impact" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="impact">项目影响 🌱</a>
-                <a href="#technology" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="technology">技术创新 🚀</a>
-                <a href="#guide" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="guide">使用指南 📝</a>
-                <a href="#testimonials" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="testimonials">家长见证 💬</a>
-                <a href="#contact" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="contact">联系我们 📞</a>
-                <a href="#register" class="bg-primary text-light px-5 py-2 rounded-full text-center hover:bg-primary/90 transition-colors mt-2 font-comic text-lg">
+                <a href="index.html" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="home">首页 🏠</a>
+                <a href="index.html#features" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="features">核心功能 ⭐</a>
+                <a href="index.html#impact" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="impact">项目影响 🌱</a>
+                <a href="index.html#technology" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="technology">技术创新 🚀</a>
+                <a href="index.html#guide" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="guide">使用指南 📝</a>
+                <a href="index.html#testimonials" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="testimonials">家长见证 💬</a>
+                <a href="index.html#contact" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="contact">联系我们 📞</a>
+                <a href="index.html#register" class="bg-primary text-light px-5 py-2 rounded-full text-center hover:bg-primary/90 transition-colors mt-2 font-comic text-lg btn-hover-effect">
                     免费注册 🎁
                 </a>
             </div>
@@ -283,7 +319,7 @@
                             </span>
                         </div>
                         
-                        <a href="#training-demo" class="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full hover:bg-primary/90 transition-all duration-300 shadow-medium hover:shadow-strong">
+                        <a href="#training-demo" class="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full hover:bg-primary/90 transition-all duration-300 shadow-medium hover:shadow-strong btn-hover-effect">
                             查看训练演示
                             <i class="fa fa-arrow-right"></i>
                         </a>
@@ -410,7 +446,7 @@
             </div>
         </section>
         
-        <!-- 三级训练路径（优化版） -->
+        <!-- 三级训练路径 -->
         <section class="py-20 bg-white overflow-hidden relative">
             <!-- 背景装饰元素 -->
             <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -618,19 +654,19 @@
                 
                 <!-- 场景选择器 -->
                 <div class="flex flex-wrap justify-center gap-4 mb-12">
-                    <button class="scene-btn bg-primary text-white px-5 py-3 rounded-full text-sm font-medium shadow-soft hover:shadow-medium transition-all duration-300" data-scene="classroom">
+                    <button class="scene-btn bg-primary text-white px-5 py-3 rounded-full text-sm font-medium shadow-soft hover:shadow-medium transition-all duration-300 btn-hover-effect" data-scene="classroom">
                         课堂场景
                     </button>
-                    <button class="scene-btn bg-white text-dark px-5 py-3 rounded-full text-sm font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:bg-white/90" data-scene="park">
+                    <button class="scene-btn bg-white text-dark px-5 py-3 rounded-full text-sm font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:bg-white/90 btn-hover-effect" data-scene="park">
                         公园玩耍
                     </button>
-                    <button class="scene-btn bg-white text-dark px-5 py-3 rounded-full text-sm font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:bg-white/90" data-scene="store">
+                    <button class="scene-btn bg-white text-dark px-5 py-3 rounded-full text-sm font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:bg-white/90 btn-hover-effect" data-scene="store">
                         超市购物
                     </button>
-                    <button class="scene-btn bg-white text-dark px-5 py-3 rounded-full text-sm font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:bg-white/90" data-scene="party">
+                    <button class="scene-btn bg-white text-dark px-5 py-3 rounded-full text-sm font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:bg-white/90 btn-hover-effect" data-scene="party">
                         生日派对
                     </button>
-                    <button class="scene-btn bg-white text-dark px-5 py-3 rounded-full text-sm font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:bg-white/90" data-scene="doctor">
+                    <button class="scene-btn bg-white text-dark px-5 py-3 rounded-full text-sm font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:bg-white/90 btn-hover-effect" data-scene="doctor">
                         看医生
                     </button>
                 </div>
@@ -691,23 +727,23 @@
                                     
                                     <!-- 下一步按钮 -->
                                     <div id="next-step-container" class="hidden mb-6">
-                                        <button id="next-step-btn" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm">
+                                        <button id="next-step-btn" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm btn-hover-effect">
                                             继续练习下一个情景 <i class="fa fa-arrow-right ml-1"></i>
                                         </button>
                                     </div>
                                     
                                     <!-- 选项按钮 -->
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6" id="response-options">
-                                        <button class="response-btn border-2 border-primary text-primary p-3 rounded-lg hover:bg-primary/5 transition-all duration-300 text-left shadow-sm hover:shadow" data-correct="true">
+                                        <button class="response-btn border-2 border-primary text-primary p-3 rounded-lg hover:bg-primary/5 transition-all duration-300 text-left shadow-sm hover:shadow option-hover" data-correct="true" data-feedback="太棒了！你不仅记得要先举手等待老师允许，回答也很清晰。这是非常标准的课堂礼仪，继续保持哦！">
                                             先举手，得到允许后站起来回答："答案是5"
                                         </button>
-                                        <button class="response-btn border-2 border-dark/10 text-dark p-3 rounded-lg hover:bg-dark/5 transition-all duration-300 text-left shadow-sm hover:shadow" data-correct="false">
+                                        <button class="response-btn border-2 border-dark/10 text-dark p-3 rounded-lg hover:bg-dark/5 transition-all duration-300 text-left shadow-sm hover:shadow option-hover" data-correct="false" data-feedback="老师提问时，即使不会也可以礼貌回应哦。下次可以试着小声说'老师，我不会'，这样比不回应更好。">
                                             保持沉默，低下头不回应
                                         </button>
-                                        <button class="response-btn border-2 border-dark/10 text-dark p-3 rounded-lg hover:bg-dark/5 transition-all duration-300 text-left shadow-sm hover:shadow" data-correct="false">
+                                        <button class="response-btn border-2 border-dark/10 text-dark p-3 rounded-lg hover:bg-dark/5 transition-all duration-300 text-left shadow-sm hover:shadow option-hover" data-correct="false" data-feedback="你的答案是对的，但记得在课堂上要先举手等待老师点名哦。这样能让课堂更有秩序，也表示对老师的尊重。">
                                             直接站起来大声说："我知道，是5"
                                         </button>
-                                        <button class="response-btn border-2 border-dark/10 text-dark p-3 rounded-lg hover:bg-dark/5 transition-all duration-300 text-left shadow-sm hover:shadow" data-correct="partly">
+                                        <button class="response-btn border-2 border-dark/10 text-dark p-3 rounded-lg hover:bg-dark/5 transition-all duration-300 text-left shadow-sm hover:shadow option-hover" data-correct="partly" data-feedback="做得好的是你记得要先举手！虽然你不会这个问题，但诚实表达也很棒。下次可以试着说'老师，我还不太明白，能再讲一次吗？'">
                                             举手说："老师，我不会这个问题"
                                         </button>
                                     </div>
@@ -892,7 +928,7 @@
                             </div>
                         </div>
                         
-                        <a href="#" class="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full hover:bg-primary/90 transition-all duration-300 shadow-medium hover:shadow-strong">
+                        <a href="#" class="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full hover:bg-primary/90 transition-all duration-300 shadow-medium hover:shadow-strong btn-hover-effect">
                             查看详细报告
                             <i class="fa fa-arrow-right"></i>
                         </a>
@@ -957,13 +993,13 @@
                                 <div class="pt-4 border-t border-gray-200">
                                     <h4 class="font-medium text-sm mb-3">反馈风格设置</h4>
                                     <div class="flex flex-wrap gap-2">
-                                        <button class="bg-primary text-white text-xs px-3 py-1 rounded-full hover:bg-primary/90 transition-colors">
+                                        <button class="bg-primary text-white text-xs px-3 py-1 rounded-full hover:bg-primary/90 transition-colors btn-hover-effect">
                                             鼓励型
                                         </button>
-                                        <button class="bg-white text-dark text-xs px-3 py-1 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors">
+                                        <button class="bg-white text-dark text-xs px-3 py-1 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors btn-hover-effect">
                                             简洁型
                                         </button>
-                                        <button class="bg-white text-dark text-xs px-3 py-1 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors">
+                                        <button class="bg-white text-dark text-xs px-3 py-1 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors btn-hover-effect">
                                             详细型
                                         </button>
                                     </div>
@@ -993,22 +1029,22 @@
                         让专业的虚拟社交训练系统，帮助孩子逐步建立社交自信，轻松融入校园和社会生活
                     </p>
                     
-                    <a href="index.html#contact" class="inline-flex items-center gap-2 bg-white text-primary font-bold px-8 py-3 rounded-full hover:bg-white/90 transition-all duration-300 shadow-strong text-lg">
-                        联系我们了解更多
-                        <i class="fa fa-arrow-right"></i>
-                    </a>
+                    <a href="index.html#contact" class="inline-flex items-center gap-2 bg-white text-primary font-bold px-8 py-3 rounded-full hover:bg-white/90 transition-all duration-300 shadow-strong text-lg btn-hover-effect">
+                            联系我们了解更多
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
                 </div>
             </div>
         </section>
     </main>
 
-      <!-- 页脚 - 优化字体与图标 -->
+    <!-- 页脚 -->
     <footer class="bg-dark text-light py-12">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-                <!-- 品牌信息 - 增加浮动动画 -->
+                <!-- 品牌信息 -->
                 <div class="md:col-span-1">
-                    <a href="#home" class="flex items-center gap-2 mb-4">
+                    <a href="index.html" class="flex items-center gap-2 mb-4">
                         <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center float">
                             <i class="fa fa-music text-light text-xl"></i>
                         </div>
@@ -1018,33 +1054,33 @@
                         用AI声音疗愈，助力孤独症儿童社会融入 🌱
                     </p>
                     <div class="flex gap-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 btn-hover-effect">
                             <i class="fa fa-weibo"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 btn-hover-effect">
                             <i class="fa fa-weixin"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 btn-hover-effect">
                             <i class="fa fa-qq"></i>
                         </a>
                     </div>
                 </div>
                 
-                <!-- 快速链接 - 优化字体 -->
+                <!-- 快速链接 -->
                 <div>
                     <h4 class="text-lg font-bold mb-4 font-comic text-primary">快速链接 🔗</h4>
                     <ul class="space-y-3">
-                        <li><a href="#home" class="text-light/60 hover:text-light transition-colors font-comic">首页 🏠</a></li>
-                        <li><a href="#features" class="text-light/60 hover:text-light transition-colors font-comic">核心功能 ⭐</a></li>
-                        <li><a href="#impact" class="text-light/60 hover:text-light transition-colors font-comic">项目影响 🌱</a></li>
-                        <li><a href="#technology" class="text-light/60 hover:text-light transition-colors font-comic">技术创新 🚀</a></li>
-                        <li><a href="#guide" class="text-light/60 hover:text-light transition-colors font-comic">使用指南 📝</a></li>
-                        <li><a href="#testimonials" class="text-light/60 hover:text-light transition-colors font-comic">家长见证 💬</a></li>
-                        <li><a href="#register" class="text-light/60 hover:text-light transition-colors font-comic">免费试用 🎁</a></li>
+                        <li><a href="index.html" class="text-light/60 hover:text-light transition-colors font-comic">首页 🏠</a></li>
+                        <li><a href="index.html#features" class="text-light/60 hover:text-light transition-colors font-comic">核心功能 ⭐</a></li>
+                        <li><a href="index.html#impact" class="text-light/60 hover:text-light transition-colors font-comic">项目影响 🌱</a></li>
+                        <li><a href="index.html#technology" class="text-light/60 hover:text-light transition-colors font-comic">技术创新 🚀</a></li>
+                        <li><a href="index.html#guide" class="text-light/60 hover:text-light transition-colors font-comic">使用指南 📝</a></li>
+                        <li><a href="index.html#testimonials" class="text-light/60 hover:text-light transition-colors font-comic">家长见证 💬</a></li>
+                        <li><a href="index.html#register" class="text-light/60 hover:text-light transition-colors font-comic">免费试用 🎁</a></li>
                     </ul>
                 </div>
                 
-                <!-- 合作与支持 - 优化字体 -->
+                <!-- 合作与支持 -->
                 <div>
                     <h4 class="text-lg font-bold mb-4 font-comic text-primary">合作与支持 🤝</h4>
                     <ul class="space-y-3">
@@ -1056,7 +1092,7 @@
                     </ul>
                 </div>
                 
-                <!-- 法律信息 - 优化字体 -->
+                <!-- 法律信息 -->
                 <div>
                     <h4 class="text-lg font-bold mb-4 font-comic text-primary">法律信息 ⚖️</h4>
                     <ul class="space-y-3">
@@ -1068,509 +1104,431 @@
                 </div>
             </div>
             
-            <!-- 版权信息 - 优化字体 -->
+            <!-- 版权信息 -->
             <div class="border-t border-light/10 pt-8 text-center text-light/60 text-sm font-comic">
                 <p>© 2025 星聆Stellin项目组. 保留所有权利. 江苏师范大学科文学院管理学院支持 🏫</p>
             </div>
         </div>
     </footer>
-    <!-- JavaScript -->
+    
+    <!-- JavaScript - 修复AI反馈显示问题 -->
     <script>
-        // 场景数据 - 包含每个选项的反馈信息
-        const scenesData = {
-            classroom: {
-                image: "https://picsum.photos/id/20/1200/400",
-                title: "课堂互动场景 <span class='text-sm font-normal bg-white/20 px-2 py-1 rounded'>(适合6-8岁)</span>",
-                description: "练习举手发言、回答问题和小组讨论等课堂社交技能",
-                otherAvatar: "https://picsum.photos/id/64/60/60",
-                otherName: "王老师",
-                otherRole: "数学老师",
-                otherMessage: "小明，这个问题你能回答一下吗？记得要先举手哦。",
-                myRole: "小学二年级",
-                myMessage: "（等待孩子回答）",
-                sceneHint: "情景提示：这是数学课上的场景，老师刚刚讲解了加法问题，现在想请同学回答。",
-                responseOptions: [
-                    {
-                        text: "先举手，得到允许后站起来回答：\"答案是5\"",
-                        correct: "true",
-                        feedback: "太棒了！你不仅记得要先举手等待老师允许，回答也很清晰。这是非常标准的课堂礼仪，继续保持哦！"
-                    },
-                    {
-                        text: "保持沉默，低下头不回应",
-                        correct: "false",
-                        feedback: "老师提问时，即使不会也可以礼貌回应哦。下次可以试着小声说\"老师，我不会\"，这样比不回应更好。",
-                        hint: "在课堂上，老师希望知道你是否理解了问题，即使不会也应该有所回应。"
-                    },
-                    {
-                        text: "直接站起来大声说：\"我知道，是5\"",
-                        correct: "false",
-                        feedback: "你的答案是对的，但记得在课堂上要先举手等待老师点名哦。这样能让课堂更有秩序，也表示对老师的尊重。",
-                        hint: "举手是课堂的基本规则，让老师知道你想回答问题，同时也不打扰别人。"
-                    },
-                    {
-                        text: "举手说：\"老师，我不会这个问题\"",
-                        correct: "partly",
-                        feedback: "做得好的是你记得要先举手！虽然你不会这个问题，但诚实表达也很棒。下次可以试着说\"老师，我还不太明白，能再讲一次吗？\"",
-                        hint: "诚实表达自己的困惑是学习的重要一步，老师会很乐意帮助你的。"
-                    }
-                ],
-                trainingTips: "这个场景帮助孩子学习课堂上的社交礼仪，包括举手发言、清晰表达和尊重他人发言等。这些技能对孩子融入学校生活非常重要。",
-                trainingGoals: [
-                    "学会举手等待老师点名",
-                    "能清晰表达自己的想法",
-                    "尊重他人，不随意打断"
-                ],
-                difficulty: 40,
-                lastTraining: "上次训练：昨天 15:30",
-                trainingCount: "已训练8次",
-                progressBars: [
-                    { label: "举手回应能力", value: 75, previous: 60, increase: 15 },
-                    { label: "语言表达清晰度", value: 60, previous: 55, increase: 5 },
-                    { label: "课堂规则遵守", value: 85, previous: 80, increase: 5 }
-                ],
-                expertAdvice: "孩子在举手回应方面进步显著，建议在日常生活中模拟课堂场景进行练习，重点提升语言表达的音量和清晰度。"
-            },
-            park: {
-                image: "https://picsum.photos/id/106/1200/400",
-                title: "公园玩耍场景 <span class='text-sm font-normal bg-white/20 px-2 py-1 rounded'>(适合5-7岁)</span>",
-                description: "练习加入游戏、分享玩具和遵守游戏规则等社交技能",
-                otherAvatar: "https://picsum.photos/id/25/60/60",
-                otherName: "小华",
-                otherRole: "同龄玩伴",
-                otherMessage: "我们在玩滑梯，你想一起来玩吗？要排队哦。",
-                myRole: "幼儿园大班",
-                myMessage: "（等待孩子回应）",
-                sceneHint: "情景提示：公园里有几个小朋友在玩滑梯，他们邀请孩子加入游戏，需要学习排队和轮流玩耍的规则。",
-                responseOptions: [
-                    {
-                        text: "微笑着说：\"好呀，谢谢！\"然后排队等待",
-                        correct: "true",
-                        feedback: "你做得太棒了！微笑着回应邀请，还主动排队，这会让其他小朋友很乐意和你一起玩。"
-                    },
-                    {
-                        text: "直接跑到前面插队滑下去",
-                        correct: "false",
-                        feedback: "加入游戏时，我们需要排队等待哦。插队会让其他小朋友不开心的。下次可以先问\"我能排队加入吗？\"",
-                        hint: "排队轮流是集体游戏的基本规则，遵守规则会让大家都玩得开心。"
-                    },
-                    {
-                        text: "摇摇头不说话，转身离开",
-                        correct: "false",
-                        feedback: "如果不想玩，可以礼貌地说\"谢谢，我现在不想玩\"。直接离开可能会让邀请你的小朋友感到困惑哦。",
-                        hint: "即使不想接受邀请，礼貌地回应也是一种重要的社交技能。"
-                    },
-                    {
-                        text: "推前面的小朋友说：\"让我先玩\"",
-                        correct: "false",
-                        feedback: "推人是不对的哦，会伤到别人也会让大家不开心。想玩的话可以说\"我能排在你后面吗？\"，大家都会欢迎你的。",
-                        hint: "和小朋友相处时，要使用温和的语言和友好的方式表达自己的想法。"
-                    }
-                ],
-                trainingTips: "公园是孩子社交的重要场所，这个场景帮助孩子学习如何礼貌地加入集体活动，理解并遵守公共场合的规则。",
-                trainingGoals: [
-                    "学会礼貌回应他人邀请",
-                    "理解并遵守排队规则",
-                    "体验分享和轮流的乐趣"
-                ],
-                difficulty: 30,
-                lastTraining: "上次训练：3天前 16:45",
-                trainingCount: "已训练5次",
-                progressBars: [
-                    { label: "加入集体能力", value: 65, previous: 50, increase: 15 },
-                    { label: "规则遵守意识", value: 70, previous: 60, increase: 10 },
-                    { label: "情绪表达适当性", value: 60, previous: 55, increase: 5 }
-                ],
-                expertAdvice: "孩子在回应邀请方面有进步，建议多带孩子去公园等公共场合，鼓励他主动参与集体活动，强化轮流和等待的概念。"
-            },
-            store: {
-                image: "https://picsum.photos/id/139/1200/400",
-                title: "超市购物场景 <span class='text-sm font-normal bg-white/20 px-2 py-1 rounded'>(适合7-9岁)</span>",
-                description: "练习请求帮助、表达需求和简单交流等购物社交技能",
-                otherAvatar: "https://picsum.photos/id/65/60/60",
-                otherName: "店员阿姨",
-                otherRole: "超市售货员",
-                otherMessage: "小朋友，你需要帮忙找什么东西吗？",
-                myRole: "小学三年级",
-                myMessage: "（等待孩子回应）",
-                sceneHint: "情景提示：孩子和妈妈一起来超市购物，妈妈让孩子自己找想买的牛奶，这时店员主动提供帮助。",
-                responseOptions: [
-                    {
-                        text: "看着店员说：\"是的，请问牛奶在哪里？\"",
-                        correct: "true",
-                        feedback: "你做得非常好！看着对方说话，清晰表达自己的需求，这是很棒的沟通方式。店员阿姨会很乐意帮助你的。"
-                    },
-                    {
-                        text: "低着头小声说：\"我...我找不到...\"",
-                        correct: "partly",
-                        feedback: "你能告诉店员需要帮助，这很好！下次可以试着抬起头，稍微大声一点说出你要找什么，这样店员能更快帮你找到哦。",
-                        hint: "和陌生人说话时，看着对方并清晰表达，能让沟通更顺畅。"
-                    },
-                    {
-                        text: "不说话，拉着店员的手往饮料区走",
-                        correct: "false",
-                        feedback: "拉别人的手不太礼貌哦。下次可以说\"我想找牛奶，您能带我去吗？\"，这样既礼貌又能让别人明白你的需求。",
-                        hint: "用语言表达需求比拉拽更合适，这是基本的社交礼仪。"
-                    },
-                    {
-                        text: "摇摇头说：\"不用\"，但其实还在到处找",
-                        correct: "false",
-                        feedback: "店员是想帮助你哦。如果确实需要帮助，可以诚实说出来：\"我在找牛奶，能帮我吗？\"。接受帮助也是一种勇敢的表现。",
-                        hint: "当我们需要帮助时，勇敢地说出来会比自己硬撑更有效。"
-                    }
-                ],
-                trainingTips: "购物场景能帮助孩子学习如何清晰表达自己的需求，礼貌地向陌生人求助，同时练习基本的沟通技巧。",
-                trainingGoals: [
-                    "能清晰表达自己的需求",
-                    "学会礼貌地向他人求助",
-                    "理解购物场所的基本社交礼仪"
-                ],
-                difficulty: 50,
-                lastTraining: "上次训练：1周前 10:20",
-                trainingCount: "已训练3次",
-                progressBars: [
-                    { label: "需求表达清晰度", value: 55, previous: 40, increase: 15 },
-                    { label: "陌生人交流胆量", value: 45, previous: 30, increase: 15 },
-                    { label: "公共场所礼仪", value: 70, previous: 60, increase: 10 }
-                ],
-                expertAdvice: "孩子在陌生人面前仍有些拘谨，建议在实际购物时，让孩子尝试简单的询问，如询问价格或位置，逐步建立自信。"
-            },
-            party: {
-                image: "https://picsum.photos/id/292/1200/400",
-                title: "生日派对场景 <span class='text-sm font-normal bg-white/20 px-2 py-1 rounded'>(适合6-9岁)</span>",
-                description: "练习赠送礼物、表达祝福和参与集体游戏等派对社交技能",
-                otherAvatar: "https://picsum.photos/id/91/60/60",
-                otherName: "小宇",
-                otherRole: "过生日的同学",
-                otherMessage: "欢迎你来参加我的生日派对！这是给我的礼物吗？",
-                myRole: "小学二年级",
-                myMessage: "（等待孩子回应）",
-                sceneHint: "情景提示：孩子参加同学的生日派对，带着礼物到达现场，主人热情地迎接并询问礼物的事情。",
-                responseOptions: [
-                    {
-                        text: "双手递上礼物说：\"生日快乐！希望你喜欢这份礼物\"",
-                        correct: "true",
-                        feedback: "太棒了！你不仅用双手递礼物，还说了祝福的话，这是非常棒的礼仪。小宇一定会很开心收到你的祝福和礼物的。"
-                    },
-                    {
-                        text: "把礼物藏在身后，小声说：\"嗯...\"",
-                        correct: "false",
-                        feedback: "参加生日派对送礼物是很开心的事情哦。下次可以大方地把礼物递给他，说句\"生日快乐\"，对方会很高兴的。",
-                        hint: "在派对上，大方地表达祝福和分享喜悦，会让大家都感到快乐。"
-                    },
-                    {
-                        text: "直接把礼物放下，跑去看蛋糕",
-                        correct: "false",
-                        feedback: "到达派对时，先和主人打招呼并送上祝福会更好哦。可以说\"生日快乐，这是给你的礼物\"，然后再去看其他东西。",
-                        hint: "参加派对时，先向主人问好并送上祝福是基本的礼貌。"
-                    },
-                    {
-                        text: "说：\"这是我妈妈买的，不是我选的\"",
-                        correct: "partly",
-                        feedback: "能把礼物送给小宇很好，但其实不用说这些哦。简单说句\"生日快乐，希望你喜欢\"就很棒了，不管谁选的礼物，心意最重要。",
-                        hint: "送礼物时，重点是表达祝福和心意，不需要解释礼物的来源。"
-                    }
-                ],
-                trainingTips: "生日派对是练习社交礼仪的好机会，孩子可以学习如何表达祝福、赠送礼物和参与集体活动，增强社交自信。",
-                trainingGoals: [
-                    "学会恰当表达祝福和感谢",
-                    "掌握基本的礼物赠送礼仪",
-                    "能积极参与集体游戏和活动"
-                ],
-                difficulty: 60,
-                lastTraining: "上次训练：2周前 14:30",
-                trainingCount: "已训练4次",
-                progressBars: [
-                    { label: "祝福表达能力", value: 60, previous: 45, increase: 15 },
-                    { label: "礼物赠送礼仪", value: 75, previous: 60, increase: 15 },
-                    { label: "集体活动参与度", value: 50, previous: 40, increase: 10 }
-                ],
-                expertAdvice: "孩子在礼仪方面表现不错，但在主动参与集体活动方面还有提升空间。建议提前告诉孩子派对流程，帮助他做好心理准备。"
-            },
-            doctor: {
-                image: "https://picsum.photos/id/96/1200/400",
-                title: "看医生场景 <span class='text-sm font-normal bg-white/20 px-2 py-1 rounded'>(适合5-8岁)</span>",
-                description: "练习描述症状、配合检查和表达感受等就医社交技能",
-                otherAvatar: "https://picsum.photos/id/338/60/60",
-                otherName: "李医生",
-                otherRole: "儿科医生",
-                otherMessage: "小朋友，你哪里不舒服呀？告诉叔叔哪里疼好吗？",
-                myRole: "幼儿园大班",
-                myMessage: "（等待孩子回应）",
-                sceneHint: "情景提示：孩子有点发烧，妈妈带他来看医生，医生正在询问孩子的症状，需要孩子描述自己的感受。",
-                responseOptions: [
-                    {
-                        text: "指着喉咙说：\"医生叔叔，我嗓子疼，还发烧\"",
-                        correct: "true",
-                        feedback: "你做得非常好！能用语言和动作告诉医生哪里不舒服，这样医生就能更快地帮助你了。继续保持哦！"
-                    },
-                    {
-                        text: "躲在妈妈身后不说话，摇摇头",
-                        correct: "false",
-                        feedback: "看医生时有点害怕是很正常的，但告诉医生哪里不舒服会让他更好地帮助你哦。下次可以拉着妈妈的手，小声告诉医生你的感受。",
-                        hint: "医生是来帮助我们的，告诉医生哪里不舒服，他才能更好地治疗我们。"
-                    },
-                    {
-                        text: "大声哭着说：\"我不要打针！\"",
-                        correct: "false",
-                        feedback: "我知道你可能害怕打针，但先告诉医生哪里不舒服更重要哦。可以说\"我嗓子疼，但我怕打针\"，医生会理解你的感受的。",
-                        hint: "表达自己的感受是对的，但也要先告诉医生你的症状，这样他才能帮你。"
-                    },
-                    {
-                        text: "说：\"不知道，妈妈知道\"",
-                        correct: "partly",
-                        feedback: "妈妈可以告诉医生，但如果你能自己说出来会更好哦。试着用简单的话说出哪里不舒服，比如\"我头疼\"，医生会更清楚怎么帮你。",
-                        hint: "自己描述症状能帮助医生更准确地了解你的情况，是很重要的能力。"
-                    }
-                ],
-                trainingTips: "就医场景能帮助孩子学习如何描述自己的感受和症状，配合医生检查，减轻对医疗场景的焦虑感。",
-                trainingGoals: [
-                    "能简单描述自己的不适",
-                    "学会配合医生的简单检查",
-                    "减轻对医疗环境的恐惧感"
-                ],
-                difficulty: 55,
-                lastTraining: "上次训练：3周前 09:15",
-                trainingCount: "已训练2次",
-                progressBars: [
-                    { label: "症状描述清晰度", value: 45, previous: 30, increase: 15 },
-                    { label: "医疗配合度", value: 50, previous: 35, increase: 15 },
-                    { label: "医疗环境适应力", value: 40, previous: 25, increase: 15 }
-                ],
-                expertAdvice: "孩子对医疗场景仍有一定焦虑，建议平时可以通过角色扮演游戏模拟看医生场景，帮助孩子熟悉流程，减轻恐惧感。"
-            }
-        };
+        document.addEventListener('DOMContentLoaded', function() {
+            // 场景数据
+            const scenesData = {
+                classroom: {
+                    image: "https://picsum.photos/id/20/1200/400",
+                    title: "课堂互动场景 <span class='text-sm font-normal bg-white/20 px-2 py-1 rounded'>(适合6-8岁)</span>",
+                    description: "练习举手发言、回答问题和小组讨论等课堂社交技能",
+                    otherAvatar: "https://picsum.photos/id/64/60/60",
+                    otherName: "王老师",
+                    otherRole: "数学老师",
+                    otherMessage: "小明，这个问题你能回答一下吗？记得要先举手哦。",
+                    myRole: "小学二年级",
+                    myMessage: "（等待孩子回答）",
+                    sceneHint: "情景提示：这是数学课上的场景，老师刚刚讲解了加法问题，现在想请同学回答。",
+                    trainingTips: "这个场景帮助孩子学习课堂上的社交礼仪，包括举手发言、清晰表达和尊重他人发言等。这些技能对孩子融入学校生活非常重要。",
+                    trainingGoals: [
+                        "学会举手等待老师点名",
+                        "能清晰表达自己的想法",
+                        "尊重他人，不随意打断"
+                    ],
+                    difficulty: 40,
+                    lastTraining: "上次训练：昨天 15:30",
+                    trainingCount: "已训练8次",
+                    progressBars: [
+                        { label: "举手回应能力", value: 75, previous: 60, increase: 15 },
+                        { label: "语言表达清晰度", value: 60, previous: 55, increase: 5 },
+                        { label: "课堂规则遵守", value: 85, previous: 80, increase: 5 }
+                    ],
+                    expertAdvice: "孩子在举手回应方面进步显著，建议在日常生活中模拟课堂场景进行练习，重点提升语言表达的音量和清晰度。"
+                },
+                park: {
+                    image: "https://picsum.photos/id/106/1200/400",
+                    title: "公园玩耍场景 <span class='text-sm font-normal bg-white/20 px-2 py-1 rounded'>(适合5-7岁)</span>",
+                    description: "练习加入游戏、分享玩具和遵守游戏规则等社交技能",
+                    otherAvatar: "https://picsum.photos/id/25/60/60",
+                    otherName: "小华",
+                    otherRole: "同龄玩伴",
+                    otherMessage: "我们在玩滑梯，你想一起来玩吗？要排队哦。",
+                    myRole: "幼儿园大班",
+                    myMessage: "（等待孩子回应）",
+                    sceneHint: "情景提示：公园里有几个小朋友在玩滑梯，他们邀请孩子加入游戏，需要学习排队和轮流玩耍的规则。",
+                    trainingTips: "公园是孩子社交的重要场所，这个场景帮助孩子学习如何礼貌地加入集体活动，理解并遵守公共场合的规则。",
+                    trainingGoals: [
+                        "学会礼貌回应他人邀请",
+                        "理解并遵守排队规则",
+                        "体验分享和轮流的乐趣"
+                    ],
+                    difficulty: 30,
+                    lastTraining: "上次训练：3天前 16:45",
+                    trainingCount: "已训练5次",
+                    progressBars: [
+                        { label: "加入集体能力", value: 65, previous: 50, increase: 15 },
+                        { label: "规则遵守意识", value: 70, previous: 60, increase: 10 },
+                        { label: "情绪表达适当性", value: 60, previous: 55, increase: 5 }
+                    ],
+                    expertAdvice: "孩子在回应邀请方面有进步，建议多带孩子去公园等公共场合，鼓励他主动参与集体活动，强化轮流和等待的概念。"
+                },
+                store: {
+                    image: "https://picsum.photos/id/139/1200/400",
+                    title: "超市购物场景 <span class='text-sm font-normal bg-white/20 px-2 py-1 rounded'>(适合7-9岁)</span>",
+                    description: "练习请求帮助、表达需求和简单交流等购物社交技能",
+                    otherAvatar: "https://picsum.photos/id/65/60/60",
+                    otherName: "店员阿姨",
+                    otherRole: "超市售货员",
+                    otherMessage: "小朋友，你需要帮忙找什么东西吗？",
+                    myRole: "小学三年级",
+                    myMessage: "（等待孩子回应）",
+                    sceneHint: "情景提示：孩子和妈妈一起来超市购物，妈妈让孩子自己找想买的牛奶，这时店员主动提供帮助。",
+                    trainingTips: "购物场景能帮助孩子学习如何清晰表达自己的需求，礼貌地向陌生人求助，同时练习基本的沟通技巧。",
+                    trainingGoals: [
+                        "能清晰表达自己的需求",
+                        "学会礼貌地向他人求助",
+                        "理解购物场所的基本社交礼仪"
+                    ],
+                    difficulty: 50,
+                    lastTraining: "上次训练：1周前 10:20",
+                    trainingCount: "已训练3次",
+                    progressBars: [
+                        { label: "需求表达清晰度", value: 55, previous: 40, increase: 15 },
+                        { label: "陌生人交流胆量", value: 45, previous: 30, increase: 15 },
+                        { label: "公共场所礼仪", value: 70, previous: 60, increase: 10 }
+                    ],
+                    expertAdvice: "孩子在陌生人面前仍有些拘谨，建议在实际购物时，让孩子尝试简单的询问，如询问价格或位置，逐步建立自信。"
+                },
+                party: {
+                    image: "https://picsum.photos/id/292/1200/400",
+                    title: "生日派对场景 <span class='text-sm font-normal bg-white/20 px-2 py-1 rounded'>(适合6-9岁)</span>",
+                    description: "练习赠送礼物、表达祝福和参与集体游戏等派对社交技能",
+                    otherAvatar: "https://picsum.photos/id/91/60/60",
+                    otherName: "小宇",
+                    otherRole: "过生日的同学",
+                    otherMessage: "欢迎你来参加我的生日派对！这是给我的礼物吗？",
+                    myRole: "小学二年级",
+                    myMessage: "（等待孩子回应）",
+                    sceneHint: "情景提示：孩子参加同学的生日派对，带着礼物到达现场，主人热情地迎接并询问礼物的事情。",
+                    trainingTips: "生日派对是练习社交礼仪的好机会，孩子可以学习如何表达祝福、赠送礼物和参与集体活动，增强社交自信。",
+                    trainingGoals: [
+                        "学会恰当表达祝福和感谢",
+                        "掌握基本的礼物赠送礼仪",
+                        "能积极参与集体游戏和活动"
+                    ],
+                    difficulty: 60,
+                    lastTraining: "上次训练：2周前 14:30",
+                    trainingCount: "已训练4次",
+                    progressBars: [
+                        { label: "祝福表达能力", value: 60, previous: 45, increase: 15 },
+                        { label: "礼物赠送礼仪", value: 75, previous: 60, increase: 15 },
+                        { label: "集体活动参与度", value: 50, previous: 40, increase: 10 }
+                    ],
+                    expertAdvice: "孩子在礼仪方面表现不错，但在主动参与集体活动方面还有提升空间。建议提前告诉孩子派对流程，帮助他做好心理准备。"
+                },
+                doctor: {
+                    image: "https://picsum.photos/id/96/1200/400",
+                    title: "看医生场景 <span class='text-sm font-normal bg-white/20 px-2 py-1 rounded'>(适合5-8岁)</span>",
+                    description: "练习描述症状、配合检查和表达感受等就医社交技能",
+                    otherAvatar: "https://picsum.photos/id/338/60/60",
+                    otherName: "李医生",
+                    otherRole: "儿科医生",
+                    otherMessage: "小朋友，你哪里不舒服呀？告诉叔叔哪里疼好吗？",
+                    myRole: "幼儿园大班",
+                    myMessage: "（等待孩子回应）",
+                    sceneHint: "情景提示：孩子有点发烧，妈妈带他来看医生，医生正在询问孩子的症状，需要孩子描述自己的感受。",
+                    trainingTips: "就医场景能帮助孩子学习如何描述自己的感受和症状，配合医生检查，减轻对医疗场景的焦虑感。",
+                    trainingGoals: [
+                        "能简单描述自己的不适",
+                        "学会配合医生的简单检查",
+                        "减轻对医疗环境的恐惧感"
+                    ],
+                    difficulty: 55,
+                    lastTraining: "上次训练：3周前 09:15",
+                    trainingCount: "已训练2次",
+                    progressBars: [
+                        { label: "症状描述清晰度", value: 45, previous: 30, increase: 15 },
+                        { label: "医疗配合度", value: 50, previous: 35, increase: 15 },
+                        { label: "医疗环境适应力", value: 40, previous: 25, increase: 15 }
+                    ],
+                    expertAdvice: "孩子对医疗场景仍有一定焦虑，建议平时可以通过角色扮演游戏模拟看医生场景，帮助孩子熟悉流程，减轻恐惧感。"
+                }
+            };
 
-        // 1. 移动端菜单切换
-        const menuBtn = document.getElementById('menuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        
-        menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            // 切换图标
-            const icon = menuBtn.querySelector('i');
-            if (icon.classList.contains('fa-bars')) {
-                icon.classList.replace('fa-bars', 'fa-times');
-            } else {
-                icon.classList.replace('fa-times', 'fa-bars');
-            }
-        });
-        
-        // 2. 场景切换功能
-        const sceneBtns = document.querySelectorAll('.scene-btn');
-        const sceneContentContainer = document.getElementById('scene-content-container');
-        
-        // 更新场景内容的函数
-        function updateScene(sceneKey) {
-            const scene = scenesData[sceneKey];
-            if (!scene) return;
+            // 1. 移动端菜单切换
+            const menuBtn = document.getElementById('menuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
             
-            // 重置交互状态
-            document.getElementById('ai-feedback').classList.add('hidden');
-            document.getElementById('next-step-container').classList.add('hidden');
-            document.getElementById('my-message').textContent = "（等待孩子回答）";
-            
-            // 添加过渡动画类
-            sceneContentContainer.classList.remove('scene-transition');
-            void sceneContentContainer.offsetWidth; // 触发重绘
-            sceneContentContainer.classList.add('scene-transition');
-            
-            // 更新基本信息
-            document.getElementById('scene-image').src = scene.image;
-            document.getElementById('scene-title').innerHTML = scene.title;
-            document.getElementById('scene-description').textContent = scene.description;
-            document.getElementById('other-avatar').src = scene.otherAvatar;
-            document.getElementById('other-name').textContent = scene.otherName;
-            document.getElementById('other-role').textContent = scene.otherRole;
-            document.getElementById('other-message').textContent = scene.otherMessage;
-            document.getElementById('my-role').textContent = scene.myRole;
-            document.getElementById('scene-hint').textContent = scene.sceneHint;
-            document.getElementById('training-tips').textContent = scene.trainingTips;
-            document.getElementById('difficulty-bar').style.width = `${scene.difficulty}%`;
-            document.getElementById('last-training').textContent = scene.lastTraining;
-            document.getElementById('training-count').textContent = scene.trainingCount;
-            document.getElementById('expert-advice').textContent = scene.expertAdvice;
-            
-            // 更新回应选项
-            const optionsContainer = document.getElementById('response-options');
-            optionsContainer.innerHTML = '';
-            scene.responseOptions.forEach((option, index) => {
-                const btn = document.createElement('button');
-                btn.className = `response-btn border-2 ${index === 0 ? 'border-primary text-primary bg-primary/5 shadow' : 'border-dark/10 text-dark shadow-sm'} p-3 rounded-lg hover:bg-primary/5 transition-all duration-300 text-left hover:shadow`;
-                btn.textContent = option.text;
-                btn.dataset.correct = option.correct;
-                btn.dataset.feedback = option.feedback;
-                if (option.hint) {
-                    btn.dataset.hint = option.hint;
-                }
-                btn.addEventListener('click', handleResponseSelect);
-                optionsContainer.appendChild(btn);
-            });
-            
-            // 更新训练目标
-            const goalsContainer = document.getElementById('training-goals');
-            goalsContainer.innerHTML = '';
-            scene.trainingGoals.forEach(goal => {
-                const li = document.createElement('li');
-                li.className = 'flex items-start gap-2';
-                li.innerHTML = `<i class="fa fa-check-circle text-primary mt-1"></i><span>${goal}</span>`;
-                goalsContainer.appendChild(li);
-            });
-            
-            // 更新进度条
-            const progressContainer = document.getElementById('progress-bars');
-            progressContainer.innerHTML = '';
-            scene.progressBars.forEach(bar => {
-                const div = document.createElement('div');
-                div.innerHTML = `
-                    <div class="flex justify-between mb-1">
-                        <span class="text-sm font-medium">${bar.label}</span>
-                        <span class="text-sm text-primary font-medium">${bar.value}%</span>
-                    </div>
-                    <div class="w-full bg-secondary rounded-full h-2.5 overflow-hidden">
-                        <div class="bg-primary h-2.5 rounded-full progress-line" style="width: ${bar.value}%"></div>
-                    </div>
-                    <div class="flex justify-between mt-1">
-                        <span class="text-xs text-dark/50">上次：${bar.previous}%</span>
-                        <span class="text-xs text-green-600 flex items-center gap-1">
-                            <i class="fa fa-arrow-up"></i> 提升${bar.increase}%
-                        </span>
-                    </div>
-                `;
-                progressContainer.appendChild(div);
-            });
-        }
-        
-        // 场景按钮点击事件
-        sceneBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // 更新按钮样式
-                sceneBtns.forEach(b => {
-                    b.classList.remove('bg-primary', 'text-white', 'shadow-medium');
-                    b.classList.add('bg-white', 'text-dark', 'shadow-soft', 'hover:bg-white/90');
+            menuBtn.addEventListener('click', () => {
+                requestAnimationFrame(() => {
+                    mobileMenu.classList.toggle('hidden');
+                    const icon = menuBtn.querySelector('i');
+                    if (icon.classList.contains('fa-bars')) {
+                        icon.classList.replace('fa-bars', 'fa-times');
+                    } else {
+                        icon.classList.replace('fa-times', 'fa-bars');
+                    }
                 });
-                btn.classList.remove('bg-white', 'text-dark', 'shadow-soft', 'hover:bg-white/90');
-                btn.classList.add('bg-primary', 'text-white', 'shadow-medium');
-                
-                // 更新场景内容
-                const sceneKey = btn.getAttribute('data-scene');
-                updateScene(sceneKey);
-            });
-        });
-        
-        // 3. 回应按钮交互 - 不同选择产生不同反馈
-        function handleResponseSelect() {
-            // 重置所有按钮样式
-            document.querySelectorAll('.response-btn').forEach(btn => {
-                btn.classList.remove('border-primary', 'text-primary', 'bg-primary/5', 'shadow');
-                btn.classList.add('border-dark/10', 'text-dark', 'shadow-sm');
             });
             
-            // 设置当前按钮为选中状态
-            this.classList.remove('border-dark/10', 'text-dark', 'shadow-sm');
-            this.classList.add('border-primary', 'text-primary', 'bg-primary/5', 'shadow');
-            
-            // 更新"我"的消息
-            document.getElementById('my-message').textContent = this.textContent;
-            
-            // 显示AI反馈
-            const feedbackContainer = document.getElementById('ai-feedback');
-            const feedbackText = document.getElementById('feedback-text');
-            
-            // 设置反馈内容
-            feedbackText.textContent = this.dataset.feedback;
-            
-            // 显示反馈区域
-            feedbackContainer.classList.remove('hidden');
-            // 重置动画
-            feedbackContainer.classList.remove('feedback-appear');
-            void feedbackContainer.offsetWidth;
-            feedbackContainer.classList.add('feedback-appear');
-            
-            // 显示下一步按钮
-            document.getElementById('next-step-container').classList.remove('hidden');
-        }
-        
-        // 下一步按钮事件
-        document.getElementById('next-step-btn').addEventListener('click', () => {
-            // 获取当前激活的场景
-            const activeSceneBtn = document.querySelector('.scene-btn.bg-primary');
-            if (activeSceneBtn) {
-                const currentScene = activeSceneBtn.getAttribute('data-scene');
+            // 2. 场景切换功能
+            function updateScene(sceneKey) {
+                const scene = scenesData[sceneKey];
+                if (!scene) return;
                 
-                // 根据当前场景显示不同的后续情景提示
-                let nextScenario = '';
-                switch(currentScene) {
-                    case 'classroom':
-                        nextScenario = '老师表扬了你，并请你坐下。这时，旁边的同学想借你的橡皮，你会怎么做？';
-                        break;
-                    case 'park':
-                        nextScenario = '玩了一会儿滑梯后，小华提议一起去玩秋千，你会怎么回应？';
-                        break;
-                    case 'store':
-                        nextScenario = '店员带你找到了牛奶，妈妈让你说谢谢，你会怎么说？';
-                        break;
-                    case 'party':
-                        nextScenario = '小宇打开礼物后很开心，邀请你一起切蛋糕，你会怎么做？';
-                        break;
-                    case 'doctor':
-                        nextScenario = '医生检查后说需要量体温，你会怎么配合？';
-                        break;
-                }
-                
-                // 更新对话内容
-                document.getElementById('other-message').textContent = nextScenario;
-                document.getElementById('my-message').textContent = "（等待孩子回答）";
-                
-                // 隐藏反馈和下一步按钮
+                // 重置交互状态
                 document.getElementById('ai-feedback').classList.add('hidden');
                 document.getElementById('next-step-container').classList.add('hidden');
+                document.getElementById('my-message').textContent = "（等待孩子回答）";
                 
-                // 重置按钮样式
-                document.querySelectorAll('.response-btn').forEach(btn => {
-                    btn.classList.remove('border-primary', 'text-primary', 'bg-primary/5', 'shadow');
-                    btn.classList.add('border-dark/10', 'text-dark', 'shadow-sm');
+                // 添加过渡动画类
+                const sceneContentContainer = document.getElementById('scene-content-container');
+                sceneContentContainer.classList.remove('scene-transition');
+                void sceneContentContainer.offsetWidth; // 触发重绘
+                sceneContentContainer.classList.add('scene-transition');
+                
+                // 更新基本信息
+                document.getElementById('scene-image').src = scene.image;
+                document.getElementById('scene-title').innerHTML = scene.title;
+                document.getElementById('scene-description').textContent = scene.description;
+                document.getElementById('other-avatar').src = scene.otherAvatar;
+                document.getElementById('other-name').textContent = scene.otherName;
+                document.getElementById('other-role').textContent = scene.otherRole;
+                document.getElementById('other-message').textContent = scene.otherMessage;
+                document.getElementById('my-role').textContent = scene.myRole;
+                document.getElementById('scene-hint').textContent = scene.sceneHint;
+                document.getElementById('training-tips').textContent = scene.trainingTips;
+                document.getElementById('difficulty-bar').style.width = `${scene.difficulty}%`;
+                document.getElementById('last-training').textContent = scene.lastTraining;
+                document.getElementById('training-count').textContent = scene.trainingCount;
+                document.getElementById('expert-advice').textContent = scene.expertAdvice;
+                
+                // 更新训练目标
+                const goalsContainer = document.getElementById('training-goals');
+                goalsContainer.innerHTML = '';
+                scene.trainingGoals.forEach(goal => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-start gap-2';
+                    li.innerHTML = `<i class="fa fa-check-circle text-primary mt-1"></i><span>${goal}</span>`;
+                    goalsContainer.appendChild(li);
+                });
+                
+                // 更新进度条
+                const progressContainer = document.getElementById('progress-bars');
+                progressContainer.innerHTML = '';
+                scene.progressBars.forEach(bar => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">${bar.label}</span>
+                            <span class="text-sm text-primary font-medium">${bar.value}%</span>
+                        </div>
+                        <div class="w-full bg-secondary rounded-full h-2.5 overflow-hidden">
+                            <div class="bg-primary h-2.5 rounded-full progress-line" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between mt-1">
+                            <span class="text-xs text-dark/50">上次：${bar.previous}%</span>
+                            <span class="text-xs text-green-600 flex items-center gap-1">
+                                <i class="fa fa-arrow-up"></i> 提升${bar.increase}%
+                            </span>
+                        </div>
+                    `;
+                    progressContainer.appendChild(div);
+                    
+                    // 进度条动画效果
+                    setTimeout(() => {
+                        div.querySelector('.progress-line').style.width = `${bar.value}%`;
+                    }, 100);
                 });
             }
-        });
-        
-        // 4. 平滑滚动
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId !== '#') {
-                    document.querySelector(targetId).scrollIntoView({
-                        behavior: 'smooth'
+            
+            // 场景按钮点击事件
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('scene-btn')) {
+                    // 更新按钮样式
+                    document.querySelectorAll('.scene-btn').forEach(b => {
+                        b.classList.remove('bg-primary', 'text-white', 'shadow-medium');
+                        b.classList.add('bg-white', 'text-dark', 'shadow-soft', 'hover:bg-white/90');
+                    });
+                    e.target.classList.remove('bg-white', 'text-dark', 'shadow-soft', 'hover:bg-white/90');
+                    e.target.classList.add('bg-primary', 'text-white', 'shadow-medium');
+                    
+                    // 更新场景内容
+                    const sceneKey = e.target.getAttribute('data-scene');
+                    updateScene(sceneKey);
+                }
+            });
+            
+            // 3. 回应按钮交互 - 修复AI反馈显示问题
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('response-btn')) {
+                    // 重置所有按钮样式
+                    document.querySelectorAll('.response-btn').forEach(btn => {
+                        btn.classList.remove('border-primary', 'text-primary', 'bg-primary/5', 'shadow', 'response-highlight');
+                        btn.classList.add('border-dark/10', 'text-dark', 'shadow-sm');
+                    });
+                    
+                    // 设置当前按钮为选中状态
+                    e.target.classList.remove('border-dark/10', 'text-dark', 'shadow-sm');
+                    e.target.classList.add('border-primary', 'text-primary', 'bg-primary/5', 'shadow', 'response-highlight');
+                    
+                    // 更新"我"的消息
+                    document.getElementById('my-message').textContent = e.target.textContent;
+                    
+                    // 显示AI反馈 (修复核心：直接从按钮获取反馈文本)
+                    const feedbackContainer = document.getElementById('ai-feedback');
+                    const feedbackText = document.getElementById('feedback-text');
+                    
+                    // 强制设置反馈内容并确保DOM更新
+                    feedbackText.textContent = e.target.dataset.feedback || "你的回应很棒！继续加油哦！";
+                    
+                    // 显示反馈区域
+                    feedbackContainer.classList.remove('hidden');
+                    // 重置动画
+                    feedbackContainer.classList.remove('feedback-appear');
+                    void feedbackContainer.offsetWidth; // 触发重绘
+                    feedbackContainer.classList.add('feedback-appear');
+                    
+                    // 显示下一步按钮
+                    document.getElementById('next-step-container').classList.remove('hidden');
+                }
+            });
+            
+            // 下一步按钮事件
+            document.getElementById('next-step-btn').addEventListener('click', () => {
+                // 获取当前激活的场景
+                const activeSceneBtn = document.querySelector('.scene-btn.bg-primary');
+                if (activeSceneBtn) {
+                    const currentScene = activeSceneBtn.getAttribute('data-scene');
+                    
+                    // 根据当前场景显示不同的后续情景提示
+                    let nextScenario = '';
+                    switch(currentScene) {
+                        case 'classroom':
+                            nextScenario = '老师表扬了你，并请你坐下。这时，旁边的同学想借你的橡皮，你会怎么做？';
+                            break;
+                        case 'park':
+                            nextScenario = '玩了一会儿滑梯后，小华提议一起去玩秋千，你会怎么回应？';
+                            break;
+                        case 'store':
+                            nextScenario = '店员带你找到了牛奶，妈妈让你说谢谢，你会怎么说？';
+                            break;
+                        case 'party':
+                            nextScenario = '小宇打开礼物后很开心，邀请你一起切蛋糕，你会怎么做？';
+                            break;
+                        case 'doctor':
+                            nextScenario = '医生检查后说需要量体温，你会怎么配合？';
+                            break;
+                    }
+                    
+                    // 更新对话内容
+                    document.getElementById('other-message').textContent = nextScenario;
+                    document.getElementById('my-message').textContent = "（等待孩子回答）";
+                    
+                    // 隐藏反馈和下一步按钮
+                    document.getElementById('ai-feedback').classList.add('hidden');
+                    document.getElementById('next-step-container').classList.add('hidden');
+                    
+                    // 重置按钮样式
+                    document.querySelectorAll('.response-btn').forEach(btn => {
+                        btn.classList.remove('border-primary', 'text-primary', 'bg-primary/5', 'shadow', 'response-highlight');
+                        btn.classList.add('border-dark/10', 'text-dark', 'shadow-sm');
                     });
                 }
             });
-        });
-        
-        // 5. 滚动时导航栏样式变化
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('py-2', 'shadow-medium');
-                navbar.classList.remove('py-4', 'shadow-soft');
-            } else {
-                navbar.classList.add('py-4', 'shadow-soft');
-                navbar.classList.remove('py-2', 'shadow-medium');
-            }
-        });
-        
-        // 6. 提示工具交互
-        document.querySelectorAll('.tooltip').forEach(tooltip => {
-            tooltip.addEventListener('mouseenter', () => {
-                const tooltipText = tooltip.querySelector('.tooltiptext');
-                tooltipText.classList.remove('opacity-0', 'invisible');
-                tooltipText.classList.add('opacity-100', 'visible');
+            
+            // 4. 平滑滚动
+            document.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = e.target.getAttribute('href');
+                    if (targetId !== '#') {
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                            
+                            // 关闭移动菜单
+                            if (!mobileMenu.classList.contains('hidden')) {
+                                mobileMenu.classList.add('hidden');
+                                const icon = menuBtn.querySelector('i');
+                                if (icon.classList.contains('fa-times')) {
+                                    icon.classList.replace('fa-times', 'fa-bars');
+                                }
+                            }
+                        }
+                    }
+                }
             });
             
-            tooltip.addEventListener('mouseleave', () => {
-                const tooltipText = tooltip.querySelector('.tooltiptext');
-                tooltipText.classList.add('opacity-0', 'invisible');
-                tooltipText.classList.remove('opacity-100', 'visible');
-            });
+            // 5. 滚动时导航栏样式变化
+            let lastScrollTop = 0;
+            const navbar = document.getElementById('navbar');
+            
+            function handleScroll() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (Math.abs(scrollTop - lastScrollTop) > 10) {
+                    if (scrollTop > 50) {
+                        navbar.classList.add('py-2', 'shadow-medium', 'bg-white/95', 'backdrop-blur-sm');
+                        navbar.classList.remove('py-4', 'shadow-soft', 'bg-transparent');
+                    } else {
+                        navbar.classList.add('py-4', 'shadow-soft', 'bg-transparent');
+                        navbar.classList.remove('py-2', 'shadow-medium', 'bg-white/95', 'backdrop-blur-sm');
+                    }
+                    lastScrollTop = scrollTop;
+                }
+            }
+            
+            // 使用节流函数优化滚动事件
+            const throttle = (func, limit) => {
+                let inThrottle;
+                return function() {
+                    const args = arguments;
+                    const context = this;
+                    if (!inThrottle) {
+                        func.apply(context, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                };
+            };
+            
+            window.addEventListener('scroll', throttle(handleScroll, 100));
+            
+            // 6. 提示工具交互
+            document.addEventListener('mouseenter', function(e) {
+                if (e.target.closest('.tooltip')) {
+                    const tooltip = e.target.closest('.tooltip');
+                    const tooltipText = tooltip.querySelector('.tooltiptext');
+                    if (tooltipText) {
+                        tooltipText.classList.remove('opacity-0', 'invisible');
+                        tooltipText.classList.add('opacity-100', 'visible');
+                    }
+                }
+            }, true);
+            
+            document.addEventListener('mouseleave', function(e) {
+                if (e.target.closest('.tooltip')) {
+                    const tooltip = e.target.closest('.tooltip');
+                    const tooltipText = tooltip.querySelector('.tooltiptext');
+                    if (tooltipText) {
+                        tooltipText.classList.add('opacity-0', 'invisible');
+                        tooltipText.classList.remove('opacity-100', 'visible');
+                    }
+                }
+            }, true);
+            
+            // 初始化进度条动画
+            setTimeout(() => {
+                document.querySelectorAll('.progress-line').forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 300);
+                });
+            }, 500);
         });
     </script>
 </body>

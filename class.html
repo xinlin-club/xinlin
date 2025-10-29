@@ -121,55 +121,54 @@
 </head>
 
 <body class="bg-secondary font-sans text-dark bg-pattern">
-    <header id="navbar" class="fixed w-full top-0 z-50 transition-all 0.3s ease bg-transparent">
+   <header id="navbar" class="fixed w-full top-0 z-50 transition-all 0.3s ease bg-transparent">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
-                <!-- 品牌Logo - 增加浮动动画 -->
-                <a href="#home" class="flex items-center gap-2">
+                <!-- 品牌Logo - 跳转首页 -->
+                <a href="index.html" class="flex items-center gap-2">
                     <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center float border-2 border-accent/30">
                         <i class="fa fa-music text-light text-xl"></i>
                     </div>
                     <span class="text-[clamp(1.2rem,3vw,1.5rem)] font-comic font-bold text-primary">星聆Stellin 🎵</span>
                 </a>
                 
-                <!-- 桌面端导航 - 增加图标与卡通字体 -->
+                <!-- 桌面端导航 - 首页链接修改 -->
                 <nav class="hidden md:flex items-center gap-6">
-                    <a href="#home" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="home">首页 🏠</a>
-                    <a href="#features" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="features">核心功能 ⭐</a>
-                    <a href="#impact" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="impact">项目影响 🌱</a>
-                    <a href="#technology" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="technology">技术创新 🚀</a>
-                    <a href="#guide" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="guide">使用指南 📝</a>
-                    <a href="#testimonials" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="testimonials">家长见证 💬</a>
-                    <a href="#contact" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="contact">联系我们 📞</a>
-                    <a href="#register" class="bg-primary text-light px-5 py-2 rounded-full hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg font-comic text-lg">
+                    <a href="index.html" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="home">首页 🏠</a>
+                    <a href="index.html#features" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="features">核心功能 ⭐</a>
+                    <a href="index.html#impact" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="impact">项目影响 🌱</a>
+                    <a href="index.html#technology" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="technology">技术创新 🚀</a>
+                    <a href="index.html#guide" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="guide">使用指南 📝</a>
+                    <a href="index.html#testimonials" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="testimonials">家长见证 💬</a>
+                    <a href="index.html#contact" class="nav-link text-dark hover:text-primary transition-colors font-comic text-lg" data-target="contact">联系我们 📞</a>
+                    <a href="index.html#register" class="bg-primary text-light px-5 py-2 rounded-full hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg font-comic text-lg">
                         免费注册 🎁
                     </a>
                 </nav>
                 
-                <!-- 移动端菜单按钮 - 优化样式 -->
+                <!-- 移动端菜单按钮 -->
                 <button id="menuBtn" class="md:hidden text-primary text-2xl focus:outline-none">
                     <i class="fa fa-bars"></i>
                 </button>
             </div>
         </div>
         
-        <!-- 移动端导航菜单（默认隐藏）- 增加卡通字体 -->
+        <!-- 移动端导航菜单 - 首页链接修改 -->
         <div id="mobileMenu" class="hidden md:hidden bg-light shadow-lg absolute w-full border-t border-primary/20">
             <div class="container mx-auto px-4 py-3 flex flex-col gap-3">
-                <a href="#home" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="home">首页 🏠</a>
-                <a href="#features" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="features">核心功能 ⭐</a>
-                <a href="#impact" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="impact">项目影响 🌱</a>
-                <a href="#technology" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="technology">技术创新 🚀</a>
-                <a href="#guide" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="guide">使用指南 📝</a>
-                <a href="#testimonials" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="testimonials">家长见证 💬</a>
-                <a href="#contact" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="contact">联系我们 📞</a>
-                <a href="#register" class="bg-primary text-light px-5 py-2 rounded-full text-center hover:bg-primary/90 transition-colors mt-2 font-comic text-lg">
+                <a href="index.html" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="home">首页 🏠</a>
+                <a href="index.html#features" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="features">核心功能 ⭐</a>
+                <a href="index.html#impact" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="impact">项目影响 🌱</a>
+                <a href="index.html#technology" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="technology">技术创新 🚀</a>
+                <a href="index.html#guide" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="guide">使用指南 📝</a>
+                <a href="index.html#testimonials" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="testimonials">家长见证 💬</a>
+                <a href="index.html#contact" class="mobile-nav-link py-2 hover:text-primary transition-colors font-comic text-lg" data-target="contact">联系我们 📞</a>
+                <a href="index.html#register" class="bg-primary text-light px-5 py-2 rounded-full text-center hover:bg-primary/90 transition-colors mt-2 font-comic text-lg">
                     免费注册 🎁
                 </a>
             </div>
         </div>
     </header>
-
 
     <!-- 页面主体内容 -->
     <main class="pt-24 pb-16">
@@ -1006,13 +1005,13 @@
         </section>
     </main>
 
-     <!-- 页脚 - 优化字体与图标 -->
+    <!-- 页脚 -->
     <footer class="bg-dark text-light py-12">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-                <!-- 品牌信息 - 增加浮动动画 -->
+                <!-- 品牌信息 -->
                 <div class="md:col-span-1">
-                    <a href="#home" class="flex items-center gap-2 mb-4">
+                    <a href="index.html" class="flex items-center gap-2 mb-4">
                         <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center float">
                             <i class="fa fa-music text-light text-xl"></i>
                         </div>
@@ -1034,21 +1033,21 @@
                     </div>
                 </div>
                 
-                <!-- 快速链接 - 优化字体 -->
+                <!-- 快速链接 -->
                 <div>
                     <h4 class="text-lg font-bold mb-4 font-comic text-primary">快速链接 🔗</h4>
                     <ul class="space-y-3">
-                        <li><a href="#home" class="text-light/60 hover:text-light transition-colors font-comic">首页 🏠</a></li>
-                        <li><a href="#features" class="text-light/60 hover:text-light transition-colors font-comic">核心功能 ⭐</a></li>
-                        <li><a href="#impact" class="text-light/60 hover:text-light transition-colors font-comic">项目影响 🌱</a></li>
-                        <li><a href="#technology" class="text-light/60 hover:text-light transition-colors font-comic">技术创新 🚀</a></li>
-                        <li><a href="#guide" class="text-light/60 hover:text-light transition-colors font-comic">使用指南 📝</a></li>
-                        <li><a href="#testimonials" class="text-light/60 hover:text-light transition-colors font-comic">家长见证 💬</a></li>
-                        <li><a href="#register" class="text-light/60 hover:text-light transition-colors font-comic">免费试用 🎁</a></li>
+                        <li><a href="index.html" class="text-light/60 hover:text-light transition-colors font-comic">首页 🏠</a></li>
+                        <li><a href="index.html#features" class="text-light/60 hover:text-light transition-colors font-comic">核心功能 ⭐</a></li>
+                        <li><a href="index.html#impact" class="text-light/60 hover:text-light transition-colors font-comic">项目影响 🌱</a></li>
+                        <li><a href="index.html#technology" class="text-light/60 hover:text-light transition-colors font-comic">技术创新 🚀</a></li>
+                        <li><a href="index.html#guide" class="text-light/60 hover:text-light transition-colors font-comic">使用指南 📝</a></li>
+                        <li><a href="index.html#testimonials" class="text-light/60 hover:text-light transition-colors font-comic">家长见证 💬</a></li>
+                        <li><a href="index.html#register" class="text-light/60 hover:text-light transition-colors font-comic">免费试用 🎁</a></li>
                     </ul>
                 </div>
                 
-                <!-- 合作与支持 - 优化字体 -->
+                <!-- 合作与支持 -->
                 <div>
                     <h4 class="text-lg font-bold mb-4 font-comic text-primary">合作与支持 🤝</h4>
                     <ul class="space-y-3">
@@ -1060,7 +1059,7 @@
                     </ul>
                 </div>
                 
-                <!-- 法律信息 - 优化字体 -->
+                <!-- 法律信息 -->
                 <div>
                     <h4 class="text-lg font-bold mb-4 font-comic text-primary">法律信息 ⚖️</h4>
                     <ul class="space-y-3">
@@ -1072,7 +1071,7 @@
                 </div>
             </div>
             
-            <!-- 版权信息 - 优化字体 -->
+            <!-- 版权信息 -->
             <div class="border-t border-light/10 pt-8 text-center text-light/60 text-sm font-comic">
                 <p>© 2025 星聆Stellin项目组. 保留所有权利. 江苏师范大学科文学院管理学院支持 🏫</p>
             </div>
@@ -1251,16 +1250,18 @@
             const userMenuBtn = document.getElementById('userMenuBtn');
             const userMenu = document.getElementById('userMenu');
             
-            userMenuBtn.addEventListener('click', () => {
-                userMenu.classList.toggle('hidden');
-            });
-            
-            // 点击其他区域关闭用户菜单
-            document.addEventListener('click', (e) => {
-                if (!userMenuBtn.contains(e.target) && !userMenu.contains(e.target)) {
-                    userMenu.classList.add('hidden');
-                }
-            });
+            if (userMenuBtn && userMenu) {
+                userMenuBtn.addEventListener('click', () => {
+                    userMenu.classList.toggle('hidden');
+                });
+                
+                // 点击其他区域关闭用户菜单
+                document.addEventListener('click', (e) => {
+                    if (!userMenuBtn.contains(e.target) && !userMenu.contains(e.target)) {
+                        userMenu.classList.add('hidden');
+                    }
+                });
+            }
             
             // 通知弹窗
             const notificationBtn = document.getElementById('notificationBtn');
@@ -1268,21 +1269,27 @@
             const modalContent = document.getElementById('modalContent');
             const closeNotification = document.getElementById('closeNotification');
             
-            notificationBtn.addEventListener('click', () => {
-                notificationModal.classList.remove('hidden');
-                setTimeout(() => {
-                    modalContent.classList.remove('scale-95', 'opacity-0');
-                    modalContent.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            });
+            if (notificationBtn) {
+                notificationBtn.addEventListener('click', () => {
+                    notificationModal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modalContent.classList.remove('scale-95', 'opacity-0');
+                        modalContent.classList.add('scale-100', 'opacity-100');
+                    }, 10);
+                });
+            }
             
-            closeNotification.addEventListener('click', closeNotificationModal);
+            if (closeNotification) {
+                closeNotification.addEventListener('click', closeNotificationModal);
+            }
             
-            notificationModal.addEventListener('click', (e) => {
-                if (e.target === notificationModal) {
-                    closeNotificationModal();
-                }
-            });
+            if (notificationModal) {
+                notificationModal.addEventListener('click', (e) => {
+                    if (e.target === notificationModal) {
+                        closeNotificationModal();
+                    }
+                });
+            }
             
             function closeNotificationModal() {
                 modalContent.classList.remove('scale-100', 'opacity-100');
@@ -1298,18 +1305,24 @@
             const videoModalContent = document.getElementById('videoModalContent');
             const closeVideo = document.getElementById('closeVideo');
             
-            courseVideoPreview.addEventListener('click', () => {
-                videoModal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden'; // 防止背景滚动
-            });
+            if (courseVideoPreview) {
+                courseVideoPreview.addEventListener('click', () => {
+                    videoModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden'; // 防止背景滚动
+                });
+            }
             
-            closeVideo.addEventListener('click', closeVideoModal);
+            if (closeVideo) {
+                closeVideo.addEventListener('click', closeVideoModal);
+            }
             
-            videoModal.addEventListener('click', (e) => {
-                if (e.target === videoModal) {
-                    closeVideoModal();
-                }
-            });
+            if (videoModal) {
+                videoModal.addEventListener('click', (e) => {
+                    if (e.target === videoModal) {
+                        closeVideoModal();
+                    }
+                });
+            }
             
             function closeVideoModal() {
                 videoModal.classList.add('hidden');
@@ -1320,63 +1333,79 @@
             const prevCourse = document.getElementById('prev-course');
             const nextCourse = document.getElementById('next-course');
             
-            prevCourse.addEventListener('click', () => {
-                showToast('已显示上一页课程');
-            });
+            if (prevCourse) {
+                prevCourse.addEventListener('click', () => {
+                    showToast('已显示上一页课程');
+                });
+            }
             
-            nextCourse.addEventListener('click', () => {
-                showToast('已显示下一页课程');
-            });
+            if (nextCourse) {
+                nextCourse.addEventListener('click', () => {
+                    showToast('已显示下一页课程');
+                });
+            }
             
             // 查看学员列表
             const viewStudents = document.getElementById('viewStudents');
-            viewStudents.addEventListener('click', () => {
-                showToast('查看8名学员列表');
-            });
+            if (viewStudents) {
+                viewStudents.addEventListener('click', () => {
+                    showToast('查看8名学员列表');
+                });
+            }
             
             // 教师资料查看
             const teacherProfile = document.getElementById('teacherProfile');
-            teacherProfile.addEventListener('click', () => {
-                showToast('查看李老师详细资料');
-            });
+            if (teacherProfile) {
+                teacherProfile.addEventListener('click', () => {
+                    showToast('查看李老师详细资料');
+                });
+            }
             
             // 图表交互
             const chartContainer = document.getElementById('chartContainer');
-            chartContainer.addEventListener('click', () => {
-                showToast('查看详细发展数据');
-            });
+            if (chartContainer) {
+                chartContainer.addEventListener('click', () => {
+                    showToast('查看详细发展数据');
+                });
+            }
             
             // 滚动时导航栏变化
             window.addEventListener('scroll', () => {
                 const navbar = document.getElementById('navbar');
-                if (window.scrollY > 50) {
-                    navbar.classList.add('py-2', 'shadow-medium');
-                    navbar.classList.remove('py-4', 'shadow-soft');
-                } else {
-                    navbar.classList.add('py-4', 'shadow-soft');
-                    navbar.classList.remove('py-2', 'shadow-medium');
+                if (navbar) {
+                    if (window.scrollY > 50) {
+                        navbar.classList.add('py-2', 'shadow-medium', 'bg-white/95', 'backdrop-blur-sm');
+                        navbar.classList.remove('py-4', 'shadow-soft', 'bg-transparent');
+                    } else {
+                        navbar.classList.add('py-4', 'shadow-soft', 'bg-transparent');
+                        navbar.classList.remove('py-2', 'shadow-medium', 'bg-white/95', 'backdrop-blur-sm');
+                    }
                 }
             });
             
             // 平滑滚动
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
                     const targetId = this.getAttribute('href');
-                    if (targetId !== '#') {
-                        document.querySelector(targetId).scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                        
-                        // 关闭移动菜单
-                        if (!mobileMenu.classList.contains('hidden')) {
-                            mobileMenu.classList.add('scale-y-0', 'opacity-0');
-                            mobileMenu.classList.remove('scale-y-100', 'opacity-100');
-                            setTimeout(() => {
-                                mobileMenu.classList.add('hidden');
-                            }, 300);
-                            menuBtn.innerHTML = '<i class="fa fa-bars"></i>';
+                    // 如果是跳转到首页则不阻止默认行为
+                    if (targetId !== 'index.html' && targetId !== '#') {
+                        e.preventDefault();
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth'
+                            });
                         }
+                    }
+                    
+                    // 关闭移动菜单
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('scale-y-0', 'opacity-0');
+                        mobileMenu.classList.remove('scale-y-100', 'opacity-100');
+                        setTimeout(() => {
+                            mobileMenu.classList.add('hidden');
+                        }, 300);
+                        menuBtn.innerHTML = '<i class="fa fa-bars"></i>';
                     }
                 });
             });
