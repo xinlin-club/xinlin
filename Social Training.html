@@ -732,20 +732,9 @@
                                         </button>
                                     </div>
                                     
-                                    <!-- 选项按钮 -->
+                                    <!-- 选项按钮容器 -->
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6" id="response-options">
-                                        <button class="response-btn border-2 border-primary text-primary p-3 rounded-lg hover:bg-primary/5 transition-all duration-300 text-left shadow-sm hover:shadow option-hover" data-correct="true" data-feedback="太棒了！你不仅记得要先举手等待老师允许，回答也很清晰。这是非常标准的课堂礼仪，继续保持哦！">
-                                            先举手，得到允许后站起来回答："答案是5"
-                                        </button>
-                                        <button class="response-btn border-2 border-dark/10 text-dark p-3 rounded-lg hover:bg-dark/5 transition-all duration-300 text-left shadow-sm hover:shadow option-hover" data-correct="false" data-feedback="老师提问时，即使不会也可以礼貌回应哦。下次可以试着小声说'老师，我不会'，这样比不回应更好。">
-                                            保持沉默，低下头不回应
-                                        </button>
-                                        <button class="response-btn border-2 border-dark/10 text-dark p-3 rounded-lg hover:bg-dark/5 transition-all duration-300 text-left shadow-sm hover:shadow option-hover" data-correct="false" data-feedback="你的答案是对的，但记得在课堂上要先举手等待老师点名哦。这样能让课堂更有秩序，也表示对老师的尊重。">
-                                            直接站起来大声说："我知道，是5"
-                                        </button>
-                                        <button class="response-btn border-2 border-dark/10 text-dark p-3 rounded-lg hover:bg-dark/5 transition-all duration-300 text-left shadow-sm hover:shadow option-hover" data-correct="partly" data-feedback="做得好的是你记得要先举手！虽然你不会这个问题，但诚实表达也很棒。下次可以试着说'老师，我还不太明白，能再讲一次吗？'">
-                                            举手说："老师，我不会这个问题"
-                                        </button>
+                                        <!-- 选项将通过JavaScript动态生成 -->
                                     </div>
                                 </div>
                                 
@@ -1111,10 +1100,10 @@
         </div>
     </footer>
     
-    <!-- JavaScript - 修复AI反馈显示问题 -->
+    <!-- JavaScript - 修复场景反馈重复问题 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 场景数据
+            // 场景数据 - 每个场景包含独立的选项和反馈
             const scenesData = {
                 classroom: {
                     image: "https://picsum.photos/id/20/1200/400",
@@ -1141,7 +1130,31 @@
                         { label: "语言表达清晰度", value: 60, previous: 55, increase: 5 },
                         { label: "课堂规则遵守", value: 85, previous: 80, increase: 5 }
                     ],
-                    expertAdvice: "孩子在举手回应方面进步显著，建议在日常生活中模拟课堂场景进行练习，重点提升语言表达的音量和清晰度。"
+                    expertAdvice: "孩子在举手回应方面进步显著，建议在日常生活中模拟课堂场景进行练习，重点提升语言表达的音量和清晰度。",
+                    nextScenario: "老师表扬了你，并请你坐下。这时，旁边的同学想借你的橡皮，你会怎么做？",
+                    // 课堂场景的专属选项和反馈
+                    options: [
+                        {
+                            text: "先举手，得到允许后站起来回答：'答案是5'",
+                            correct: "true",
+                            feedback: "太棒了！你不仅记得要先举手等待老师允许，回答也很清晰。这是非常标准的课堂礼仪，继续保持哦！"
+                        },
+                        {
+                            text: "保持沉默，低下头不回应",
+                            correct: "false",
+                            feedback: "老师提问时，即使不会也可以礼貌回应哦。下次可以试着小声说'老师，我不会'，这样比不回应更好。"
+                        },
+                        {
+                            text: "直接站起来大声说：'我知道，是5'",
+                            correct: "false",
+                            feedback: "你的答案是对的，但记得在课堂上要先举手等待老师点名哦。这样能让课堂更有秩序，也表示对老师的尊重。"
+                        },
+                        {
+                            text: "举手说：'老师，我不会这个问题'",
+                            correct: "partly",
+                            feedback: "做得好的是你记得要先举手！虽然你不会这个问题，但诚实表达也很棒。下次可以试着说'老师，我还不太明白，能再讲一次吗？'"
+                        }
+                    ]
                 },
                 park: {
                     image: "https://picsum.photos/id/106/1200/400",
@@ -1168,7 +1181,31 @@
                         { label: "规则遵守意识", value: 70, previous: 60, increase: 10 },
                         { label: "情绪表达适当性", value: 60, previous: 55, increase: 5 }
                     ],
-                    expertAdvice: "孩子在回应邀请方面有进步，建议多带孩子去公园等公共场合，鼓励他主动参与集体活动，强化轮流和等待的概念。"
+                    expertAdvice: "孩子在回应邀请方面有进步，建议多带孩子去公园等公共场合，鼓励他主动参与集体活动，强化轮流和等待的概念。",
+                    nextScenario: "玩了一会儿滑梯后，小华提议一起去玩秋千，你会怎么回应？",
+                    // 公园场景的专属选项和反馈
+                    options: [
+                        {
+                            text: "笑着说：'好呀！我们一起去玩秋千吧，我会排队的'",
+                            correct: "true",
+                            feedback: "太棒了！你用友好的态度回应了邀请，还主动提到会排队，这是非常棒的社交表现，其他小朋友会很愿意和你玩的！"
+                        },
+                        {
+                            text: "直接跑向秋千，挤到其他小朋友前面",
+                            correct: "false",
+                            feedback: "在公园玩的时候，我们需要遵守排队规则哦。下次可以等前面的小朋友玩完了再玩，这样大家都会很开心。"
+                        },
+                        {
+                            text: "摇摇头说：'我不想玩'",
+                            correct: "partly",
+                            feedback: "你诚实地表达了自己的想法，这很好！如果能多说一句'不过谢谢你们邀请我'，会更有礼貌哦。"
+                        },
+                        {
+                            text: "不理会他们，自己去玩别的",
+                            correct: "false",
+                            feedback: "当别人邀请你时，即使不想参加，也可以礼貌地回应一下。试着说'谢谢，我想先玩那个'，这样对方会感受到你的尊重。"
+                        }
+                    ]
                 },
                 store: {
                     image: "https://picsum.photos/id/139/1200/400",
@@ -1195,7 +1232,31 @@
                         { label: "陌生人交流胆量", value: 45, previous: 30, increase: 15 },
                         { label: "公共场所礼仪", value: 70, previous: 60, increase: 10 }
                     ],
-                    expertAdvice: "孩子在陌生人面前仍有些拘谨，建议在实际购物时，让孩子尝试简单的询问，如询问价格或位置，逐步建立自信。"
+                    expertAdvice: "孩子在陌生人面前仍有些拘谨，建议在实际购物时，让孩子尝试简单的询问，如询问价格或位置，逐步建立自信。",
+                    nextScenario: "店员带你找到了牛奶，妈妈让你说谢谢，你会怎么说？",
+                    // 超市场景的专属选项和反馈
+                    options: [
+                        {
+                            text: "看着店员说：'阿姨您好，我想买草莓味的牛奶，请问在哪里可以找到呢？'",
+                            correct: "true",
+                            feedback: "非常棒！你不仅主动问好，还清晰地说出了自己想要的东西，声音也很合适。这样店员能很快帮你找到需要的商品。"
+                        },
+                        {
+                            text: "小声地说：'牛奶...'",
+                            correct: "partly",
+                            feedback: "你尝试表达了自己的需求，这很好！下次可以说得再清楚一点，告诉店员你想要什么口味的牛奶，这样会更方便哦。"
+                        },
+                        {
+                            text: "拉着店员的手直接往牛奶区走",
+                            correct: "false",
+                            feedback: "在超市里，我们可以用语言告诉店员自己需要什么，而不是直接拉别人的手哦。试着说'请带我去牛奶区好吗'会更礼貌。"
+                        },
+                        {
+                            text: "摇摇头说：'不用了'",
+                            correct: "false",
+                            feedback: "店员很乐意帮助你哦。如果你确实不需要帮助，可以说'谢谢，我自己找一下'，这样既礼貌又清晰。"
+                        }
+                    ]
                 },
                 party: {
                     image: "https://picsum.photos/id/292/1200/400",
@@ -1222,7 +1283,31 @@
                         { label: "礼物赠送礼仪", value: 75, previous: 60, increase: 15 },
                         { label: "集体活动参与度", value: 50, previous: 40, increase: 10 }
                     ],
-                    expertAdvice: "孩子在礼仪方面表现不错，但在主动参与集体活动方面还有提升空间。建议提前告诉孩子派对流程，帮助他做好心理准备。"
+                    expertAdvice: "孩子在礼仪方面表现不错，但在主动参与集体活动方面还有提升空间。建议提前告诉孩子派对流程，帮助他做好心理准备。",
+                    nextScenario: "小宇打开礼物后很开心，邀请你一起切蛋糕，你会怎么做？",
+                    // 生日派对场景的专属选项和反馈
+                    options: [
+                        {
+                            text: "笑着说：'祝你生日快乐！这是我给你选的礼物，希望你喜欢'",
+                            correct: "true",
+                            feedback: "太棒了！你不仅送上了生日祝福，还友好地介绍了礼物，这样的表达非常得体，小宇一定会很开心收到你的祝福和礼物。"
+                        },
+                        {
+                            text: "直接把礼物塞给对方就跑开",
+                            correct: "false",
+                            feedback: "送礼物时，我们可以微笑着说一句祝福的话，比如'生日快乐'。这样对方会更能感受到你的心意哦。"
+                        },
+                        {
+                            text: "点点头，把礼物放在桌子上",
+                            correct: "partly",
+                            feedback: "你把礼物送出去了，这很好！如果能加上一句简单的祝福，比如'生日快乐'，会让这份礼物更有意义哦。"
+                        },
+                        {
+                            text: "说：'这个礼物很贵的，你要好好保管'",
+                            correct: "false",
+                            feedback: "送礼物最重要的是心意哦。可以说'这是我特意为你选的，希望你喜欢'，这样既真诚又不会让对方有压力。"
+                        }
+                    ]
                 },
                 doctor: {
                     image: "https://picsum.photos/id/96/1200/400",
@@ -1249,7 +1334,31 @@
                         { label: "医疗配合度", value: 50, previous: 35, increase: 15 },
                         { label: "医疗环境适应力", value: 40, previous: 25, increase: 15 }
                     ],
-                    expertAdvice: "孩子对医疗场景仍有一定焦虑，建议平时可以通过角色扮演游戏模拟看医生场景，帮助孩子熟悉流程，减轻恐惧感。"
+                    expertAdvice: "孩子对医疗场景仍有一定焦虑，建议平时可以通过角色扮演游戏模拟看医生场景，帮助孩子熟悉流程，减轻恐惧感。",
+                    nextScenario: "医生检查后说需要量体温，你会怎么配合？",
+                    // 看医生场景的专属选项和反馈
+                    options: [
+                        {
+                            text: "指着额头说：'医生叔叔，我这里有点烫，感觉不舒服'",
+                            correct: "true",
+                            feedback: "做得非常好！你清晰地告诉了医生哪里不舒服，这样医生能更快了解你的情况。描述得越清楚，医生越能准确帮助你。"
+                        },
+                        {
+                            text: "害怕地躲到妈妈身后不说话",
+                            correct: "false",
+                            feedback: "看医生可能会有点紧张，这很正常。下次可以拉着妈妈的手，小声告诉医生哪里不舒服，医生会轻轻的，不会让你疼的。"
+                        },
+                        {
+                            text: "哭着说：'我不要看医生，我要回家'",
+                            correct: "false",
+                            feedback: "我知道你可能有点害怕，但医生是来帮助我们的哦。试着告诉医生'我有点不舒服'，这样他才能帮你好起来。"
+                        },
+                        {
+                            text: "点点头，但是不说话",
+                            correct: "partly",
+                            feedback: "你回应了医生，这很好！如果能再简单说一下哪里不舒服，比如'我头疼'，医生会更清楚该怎么帮助你哦。"
+                        }
+                    ]
                 }
             };
 
@@ -1269,7 +1378,7 @@
                 });
             });
             
-            // 2. 场景切换功能
+            // 2. 场景切换功能 - 动态生成当前场景的选项
             function updateScene(sceneKey) {
                 const scene = scenesData[sceneKey];
                 if (!scene) return;
@@ -1338,6 +1447,26 @@
                         div.querySelector('.progress-line').style.width = `${bar.value}%`;
                     }, 100);
                 });
+                
+                // 动态生成当前场景的选项按钮（核心修复点）
+                const optionsContainer = document.getElementById('response-options');
+                optionsContainer.innerHTML = ''; // 清空现有选项
+                
+                scene.options.forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.className = 'response-btn border-2 border-dark/10 text-dark p-3 rounded-lg hover:bg-dark/5 transition-all duration-300 text-left shadow-sm hover:shadow option-hover';
+                    btn.dataset.correct = option.correct;
+                    btn.dataset.feedback = option.feedback;
+                    btn.textContent = option.text;
+                    
+                    // 根据是否正确设置初始样式
+                    if (option.correct === 'true') {
+                        btn.classList.remove('border-dark/10');
+                        btn.classList.add('border-primary', 'text-primary');
+                    }
+                    
+                    optionsContainer.appendChild(btn);
+                });
             }
             
             // 场景按钮点击事件
@@ -1357,7 +1486,7 @@
                 }
             });
             
-            // 3. 回应按钮交互 - 修复AI反馈显示问题
+            // 3. 回应按钮交互 - 使用当前场景的专属反馈
             document.addEventListener('click', function(e) {
                 if (e.target.classList.contains('response-btn')) {
                     // 重置所有按钮样式
@@ -1373,7 +1502,7 @@
                     // 更新"我"的消息
                     document.getElementById('my-message').textContent = e.target.textContent;
                     
-                    // 显示AI反馈 (修复核心：直接从按钮获取反馈文本)
+                    // 显示AI反馈 (使用当前按钮的专属反馈)
                     const feedbackContainer = document.getElementById('ai-feedback');
                     const feedbackText = document.getElementById('feedback-text');
                     
@@ -1397,41 +1526,24 @@
                 // 获取当前激活的场景
                 const activeSceneBtn = document.querySelector('.scene-btn.bg-primary');
                 if (activeSceneBtn) {
-                    const currentScene = activeSceneBtn.getAttribute('data-scene');
+                    const currentSceneKey = activeSceneBtn.getAttribute('data-scene');
+                    const currentScene = scenesData[currentSceneKey];
                     
-                    // 根据当前场景显示不同的后续情景提示
-                    let nextScenario = '';
-                    switch(currentScene) {
-                        case 'classroom':
-                            nextScenario = '老师表扬了你，并请你坐下。这时，旁边的同学想借你的橡皮，你会怎么做？';
-                            break;
-                        case 'park':
-                            nextScenario = '玩了一会儿滑梯后，小华提议一起去玩秋千，你会怎么回应？';
-                            break;
-                        case 'store':
-                            nextScenario = '店员带你找到了牛奶，妈妈让你说谢谢，你会怎么说？';
-                            break;
-                        case 'party':
-                            nextScenario = '小宇打开礼物后很开心，邀请你一起切蛋糕，你会怎么做？';
-                            break;
-                        case 'doctor':
-                            nextScenario = '医生检查后说需要量体温，你会怎么配合？';
-                            break;
+                    if (currentScene && currentScene.nextScenario) {
+                        // 更新对话内容为下一个情景
+                        document.getElementById('other-message').textContent = currentScene.nextScenario;
+                        document.getElementById('my-message').textContent = "（等待孩子回答）";
+                        
+                        // 隐藏反馈和下一步按钮
+                        document.getElementById('ai-feedback').classList.add('hidden');
+                        document.getElementById('next-step-container').classList.add('hidden');
+                        
+                        // 重置按钮样式
+                        document.querySelectorAll('.response-btn').forEach(btn => {
+                            btn.classList.remove('border-primary', 'text-primary', 'bg-primary/5', 'shadow', 'response-highlight');
+                            btn.classList.add('border-dark/10', 'text-dark', 'shadow-sm');
+                        });
                     }
-                    
-                    // 更新对话内容
-                    document.getElementById('other-message').textContent = nextScenario;
-                    document.getElementById('my-message').textContent = "（等待孩子回答）";
-                    
-                    // 隐藏反馈和下一步按钮
-                    document.getElementById('ai-feedback').classList.add('hidden');
-                    document.getElementById('next-step-container').classList.add('hidden');
-                    
-                    // 重置按钮样式
-                    document.querySelectorAll('.response-btn').forEach(btn => {
-                        btn.classList.remove('border-primary', 'text-primary', 'bg-primary/5', 'shadow', 'response-highlight');
-                        btn.classList.add('border-dark/10', 'text-dark', 'shadow-sm');
-                    });
                 }
             });
             
@@ -1518,6 +1630,9 @@
                     }
                 }
             }, true);
+            
+            // 初始化：加载默认场景（课堂场景）
+            updateScene('classroom');
             
             // 初始化进度条动画
             setTimeout(() => {
